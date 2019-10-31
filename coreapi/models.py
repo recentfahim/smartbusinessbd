@@ -60,8 +60,9 @@ class ContactCompany(models.Model):
         return self.company_name
 
 
-class Category(models):
+class Category(models.Model):
     name = models.CharField(max_length=45, null=True)
+    description = models.CharField(max_length=100, blank=True, null=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
     is_public = models.BooleanField(default=False)
 
@@ -72,8 +73,9 @@ class Category(models):
         return self.name
 
 
-class SubCategory(models):
+class SubCategory(models.Model):
     name = models.CharField(max_length=45, null=True)
+    description = models.CharField(max_length=100, blank=True, null=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
     is_public = models.BooleanField(default=False)
@@ -85,7 +87,7 @@ class SubCategory(models):
         return self.name
 
 
-class Brand(models):
+class Brand(models.Model):
     name = models.CharField(max_length=45, null=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
     logo = models.CharField(max_length=45, null=True, blank=True)
@@ -99,7 +101,7 @@ class Brand(models):
         return self.name
 
 
-class ContactPerson(models):
+class ContactPerson(models.Model):
     name = models.CharField(null=True, max_length=30)
     mobile_number = models.CharField(max_length=15, blank=True, null=True)
     email = models.EmailField(max_length=50, blank=True, null=True)
@@ -115,7 +117,7 @@ class ContactPerson(models):
         return self.name
 
 
-class Warehouse(models):
+class Warehouse(models.Model):
     name = models.CharField(max_length=30, null=True)
     address = models.CharField(max_length=50, blank=True, null=True)
     phone = models.CharField(blank=True, null=True, max_length=15)
@@ -133,10 +135,10 @@ class Warehouse(models):
         return self.name
 
 
-class Product(models):
+class Product(models.Model):
     item_key = models.CharField(max_length=10, blank=True, null=True)
     item_name = models.CharField(max_length=30, null=True)
-    stock_alert = models.IntegerField(max_length=5, blank=True, null=True)
+    stock_alert = models.IntegerField(blank=True, null=True)
     unit = models.CharField(max_length=10, blank=True, null=True)
     vat = models.FloatField(blank=True, null=True)
     description = models.TextField(max_length=250, blank=True, null=True)

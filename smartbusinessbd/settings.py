@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'rest_framework',
     'coreapi',
     'allauth',
     'allauth.account',
@@ -38,6 +39,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.linkedin_oauth2',
     'allauth.socialaccount.providers.twitter',
 ]
+
+AUTH_USER_MODEL = 'coreapi.CustomUser'
 
 SITE_ID = 1
 
