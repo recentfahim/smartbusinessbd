@@ -9,12 +9,6 @@ class BrandSerializer(serializers.ModelSerializer):
         fields = ['name', 'user', 'logo', 'url', 'is_public']
 
 
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ['name', 'description', 'user', 'is_public']
-
-
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
@@ -52,6 +46,15 @@ class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCategory
         fields = ['name', 'description', 'user', 'is_public']
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    category_sub_category = SubCategorySerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'description', 'user', 'is_public', 'category_sub_category']
+        read_only_fields = ['get_sub_category']
 
 
 class ProductSerializer(serializers.ModelSerializer):

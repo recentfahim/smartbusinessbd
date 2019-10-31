@@ -19,3 +19,17 @@ class GetCategory(APIView):
             "data": category_serializer.data
         }
         return Response(context, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        category = Category.objects.create(
+            name=data.get('name'),
+            description=data.get('description'),
+            user=CustomUser.objects.get(pk=1)
+        )
+        category_serializer = CategorySerializer(category)
+        context = {
+            'massage': 'category created successfully',
+            'data': category_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
