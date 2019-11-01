@@ -7,4 +7,7 @@ urlpatterns = [
     path('city/', views.GetCity.as_view(), name='city'),
     path('subcategory/', views.GetSubCategory.as_view(), name='subcategory'),
     path('brand/', views.GetBrand.as_view(), name='brand'),
+    path('category/<int:cat_id>/', views.CategoryView.as_view(), name='category_view'),
+    path('subcategory/<int:sub_cat_id>/', views.SubCategoryView.as_view(), name='subcategory_view'),
+    path('brand/<int:brand_id>/', views.BrandView.as_view(), name='brand_view'),
 ]

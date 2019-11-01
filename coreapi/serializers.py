@@ -3,7 +3,16 @@ from .models import Brand, Category, City, ContactCompany, ContactPerson, Countr
     Warehouse
 
 
+class CustomUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'role', 'phone', 'avatar']
+
+
 class BrandSerializer(serializers.ModelSerializer):
+    user = CustomUserSerializer(read_only=True)
+
     class Meta:
         model = Brand
         fields = ['id', 'name', 'user', 'logo', 'url', 'is_public']
@@ -36,12 +45,6 @@ class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
         fields = ['id', 'name', 'country_city']
-
-
-class CustomUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'role', 'phone', 'avatar']
 
 
 class SubCategorySerializer(serializers.ModelSerializer):

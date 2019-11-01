@@ -141,3 +141,59 @@ class GetBrand(APIView):
         }
         return Response(context, status=status.HTTP_200_OK)
 
+
+class CategoryView(APIView):
+    def get(self, reauest, *args, **kwargs):
+        category = Category.objects.get(pk=kwargs.get('cat_id'))
+        category_serializer = CategorySerializer(category)
+        context = {
+            'message': 'Single category',
+            'data': category_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        category = Category.objects.get(pk=kwargs.get('cat_id'))
+        category.delete()
+        context = {
+            'message': 'category deleted successfully',
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class SubCategoryView(APIView):
+    def get(self, reauest, *args, **kwargs):
+        sub_category = SubCategory.objects.get(pk=kwargs.get('sub_cat_id'))
+        sub_category_serializer = SubCategorySerializer(sub_category)
+        context = {
+            'message': 'Single category',
+            'data': sub_category_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        sub_category = SubCategory.objects.get(pk=kwargs.get('sub_cat_id'))
+        sub_category.delete()
+        context = {
+            'message': 'sub category deleted successfully',
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class BrandView(APIView):
+    def get(self, reauest, *args, **kwargs):
+        brand = Brand.objects.get(pk=kwargs.get('brand_id'))
+        brand_serializer = BrandSerializer(brand)
+        context = {
+            'message': 'Single Brand',
+            'data': brand_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        brand = Brand.objects.get(pk=kwargs.get('brand_id'))
+        brand.delete()
+        context = {
+            'message': 'brand deleted successfully',
+        }
+        return Response(context, status=status.HTTP_200_OK)
