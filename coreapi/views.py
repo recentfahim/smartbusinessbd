@@ -144,7 +144,7 @@ class GetBrand(APIView):
 
 class CategoryView(APIView):
     def get(self, reauest, *args, **kwargs):
-        category = Category.objects.get(pk=kwargs.get('cat_id'))
+        category = Category.objects.get(pk=self.kwargs.get('cat_id'))
         category_serializer = CategorySerializer(category)
         context = {
             'message': 'Single category',
@@ -153,11 +153,27 @@ class CategoryView(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        category = Category.objects.get(pk=kwargs.get('cat_id'))
+        category = Category.objects.get(pk=self.kwargs.get('cat_id'))
         category.delete()
         context = {
             'message': 'category deleted successfully',
         }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        data = self.request.data
+        name = data.get('name')
+        description = data.get('description')
+        Category.objects.filter(pk=self.kwargs.get('cat_id')).update(name=name, description=description)
+
+        category = Category.objects.get(pk=self.kwargs.get('cat_id'))
+        category_serializer = CategorySerializer(category)
+
+        context = {
+            'message': 'Category updated successfully',
+            'data': category_serializer.data
+        }
+
         return Response(context, status=status.HTTP_200_OK)
 
 
@@ -176,6 +192,21 @@ class SubCategoryView(APIView):
         sub_category.delete()
         context = {
             'message': 'sub category deleted successfully',
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        sub_category = SubCategory.objects.filter(pk=kwargs.get('sub_cat_id')).update(
+            name=data.get('name'),
+            description=data.get('description'),
+            category=Category.objects.get(name=data.get('category'))
+        )
+        sub_category = SubCategory.objects.filter(pk=kwargs.get('sub_cat_id'))
+        sub_category_serializer = SubCategorySerializer(sub_category)
+        context = {
+            'massage': 'category created successfully',
+            'data': sub_category_serializer.data
         }
         return Response(context, status=status.HTTP_200_OK)
 
