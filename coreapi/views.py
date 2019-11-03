@@ -142,6 +142,51 @@ class GetBrand(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
 
+class GetContactCompany(APIView):
+    def get(self, request, *args, **kwargs):
+        companies = ContactCompany.objects.all()
+
+        company_serializer = ContactCompanySerializer(companies, many=True)
+
+        context = {
+            'message': 'All Companies',
+            'data': company_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+
+        contact_company = ContactCompany.objects.create(
+            company_name=data.get('company_name'),
+            group_reference=data.get('group_reference'),
+            attention=data.get('attention'),
+            address_1=data.get('address_1'),
+            address_2=data.get('address_2'),
+            country=Country.objects.get(name=data.get('country')),
+            city=City.objects.get(name=data.get('city')),
+            post_code=data.get('post_code'),
+            company_email=data.get('company_email'),
+            phone=data.get('phone'),
+            fax=data.get('fax'),
+            mobile_number=data.get('mobile_number'),
+            skype=data.get('skype'),
+            website=data.get('website'),
+            supplier=data.get('supplier'),
+            customer=data.get('customer'),
+            user=CustomUser.objects.get(pk=1)
+        )
+        contact_company_serializer = ContactCompanySerializer(contact_company)
+
+        context = {
+            'message': 'Contact Company created successfully',
+            'data': contact_company_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+
 class CategoryView(APIView):
     def get(self, reauest, *args, **kwargs):
         category = Category.objects.get(pk=self.kwargs.get('cat_id'))
@@ -242,6 +287,56 @@ class BrandView(APIView):
         context = {
             'message': 'Brand updated successfully',
             'data': brand_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class ContactCompanyView(APIView):
+    def get(self, request, *args, **kwargs):
+        contact_company = ContactCompany.objects.get(pk=kwargs.get('contact_company_id'))
+        contact_company_serializer = ContactCompanySerializer(contact_company)
+        context = {
+            'message': 'Single Contact company',
+            'data': contact_company_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        contact_company = ContactCompany.objects.get(pk=kwargs.get('contact_company_id'))
+        contact_company.delete()
+
+        context = {
+            'message': 'Contact company deleted successfully'
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        ContactCompany.objects.filter(pk=kwargs.get('contact_company_id')).update(
+            company_name=data.get('company_name'),
+            group_reference=data.get('group_reference'),
+            attention=data.get('attention'),
+            address_1=data.get('address_1'),
+            address_2=data.get('address_2'),
+            country=Country.objects.get(name=data.get('country')),
+            city=City.objects.get(name=data.get('city')),
+            post_code=data.get('post_code'),
+            company_email=data.get('company_email'),
+            phone=data.get('phone'),
+            fax=data.get('fax'),
+            mobile_number=data.get('mobile_number'),
+            skype=data.get('skype'),
+            website=data.get('website'),
+            supplier=data.get('supplier'),
+            customer=data.get('customer'),
+        )
+        contact_company = ContactCompany.objects.get(pk=kwargs.get('contact_company_id'))
+        contact_company_serializer = ContactCompanySerializer(contact_company)
+
+        context = {
+            'message': 'Contact company updated successfully',
+            'data': contact_company_serializer.data
         }
 
         return Response(context, status=status.HTTP_200_OK)
