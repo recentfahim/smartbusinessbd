@@ -228,3 +228,20 @@ class BrandView(APIView):
             'message': 'brand deleted successfully',
         }
         return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        Brand.objects.filter(pk=kwargs.get('brand_id')).update(
+            name=data.get('name'),
+            logo=data.get('logo'),
+            url=data.get('url')
+        )
+        brand = Brand.objects.get(pk=kwargs.get('brand_id'))
+        brand_serializer = BrandSerializer(brand)
+
+        context = {
+            'message': 'Brand updated successfully',
+            'data': brand_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
