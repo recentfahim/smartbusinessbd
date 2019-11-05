@@ -57,6 +57,8 @@ class ContactCompany(models.Model):
     customer = models.BooleanField(default=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True,
                              related_name='contact_company_user')
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'contact_company'
@@ -71,6 +73,8 @@ class Category(models.Model):
     description = models.CharField(max_length=100, blank=True, null=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True, related_name='category_user')
     is_public = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'category'
@@ -88,6 +92,8 @@ class SubCategory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category_sub_category', blank=True,
                                  null=True)
     is_public = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'sub_category'
@@ -103,6 +109,8 @@ class Brand(models.Model):
     logo = models.CharField(max_length=45, null=True, blank=True)
     url = models.CharField(max_length=45, null=True, blank=True)
     is_public = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'brand'
@@ -121,6 +129,8 @@ class ContactPerson(models.Model):
     customer = models.BooleanField(default=True)
     company = models.ForeignKey(ContactCompany, blank=True, null=True, on_delete=models.CASCADE,
                                 related_name='contact_person_company')
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'contact_person'
@@ -140,9 +150,36 @@ class Warehouse(models.Model):
     email = models.EmailField(max_length=50, blank=True, null=True)
     is_primary = models.BooleanField(default=False)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True, related_name='warehouse_user')
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'warehouse'
+
+    def __str__(self):
+        return self.name
+
+
+class Company(models.Model):
+    name = models.CharField(max_length=55)
+    website = models.CharField(max_length=50, null=True, blank=True)
+    email = models.EmailField(max_length=30, null=True, blank=True)
+    address = models.CharField(max_length=100, blank=True, null=True)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, blank=True, null=True)
+    region = models.CharField(max_length=20, blank=True, null=True)
+    postcode = models.IntegerField(blank=True, null=True)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, blank=True, null=True)
+    phone = models.CharField(max_length=15, null=True, blank=True)
+    fax = models.CharField(max_length=15, null=True, blank=True)
+    image = models.CharField(max_length=50, blank=True, null=True)
+    logo = models.CharField(max_length=50, blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'company'
+        verbose_name_plural = 'companies'
 
     def __str__(self):
         return self.name
@@ -164,9 +201,70 @@ class Product(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True, related_name='product_user')
     warehouse = models.ForeignKey(Warehouse, blank=True, null=True, on_delete=models.CASCADE,
                                   related_name='product_warehouse')
+    company = models.ForeignKey(Company, blank=True, null=True, related_name='company_product',
+                                on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'product'
 
     def __str__(self):
         return self.item_name
+
+
+class EcommerceSite(models.Model):
+    name = models.CharField(max_length=30)
+    logo = models.CharField(max_length=30, blank=True, null=True)
+    website = models.CharField(max_length=30, blank=True, null=True)
+    shop_link = models.CharField(max_length=50, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ecommerce_store'
+
+    def __str__(self):
+        return self.name
+
+
+class EcommerceHasProduct(models.Model):
+    price = models.CharField(max_length=10)
+    quantity = models.CharField(max_length=5)
+    product = models.ForeignKey(Product, blank=True, null=True, on_delete=models.CASCADE, related_name='online_store_has_product')
+    ecommerce = models.ForeignKey(EcommerceSite, blank=True, null=True, on_delete=models.CASCADE, related_name='online_store_product')
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ecommerce_has_product'
+
+    def __str__(self):
+        return '{product} - {ecommerce}'.format(product=self.product, ecommerce=self.ecommerce)
+
+
+class SellRecord(models.Model):
+    price = models.CharField(max_length=10)
+    quantity = models.CharField(max_length=5)
+    ecommerce_has_product = models.ForeignKey(EcommerceHasProduct, on_delete=models.CASCADE, related_name='product_sell_record')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'sell_record'
+
+
+class Partnership(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user_partnership')
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='company_partnership', blank=True, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_partnership', blank=True, null=True)
+    percentage = models.CharField(max_length=5, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'partnership'
+
+    def __str__(self):
+        return '{} - {}'.format(self.user.username, self.percentage)
