@@ -24,7 +24,19 @@ class CitySerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 
+class CountrySerializer(serializers.ModelSerializer):
+    country_city = CitySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Country
+        fields = ['id', 'name', 'country_city']
+
+
 class ContactCompanySerializer(serializers.ModelSerializer):
+    country = CountrySerializer(read_only=True)
+    city = CitySerializer(read_only=True)
+    user = CustomUserSerializer(read_only=True)
+
     class Meta:
         model = ContactCompany
         fields = ['id', 'company_name', 'group_reference', 'attention', 'address_1', 'address_2', 'country', 'city',
@@ -37,14 +49,6 @@ class ContactPersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactPerson
         fields = ['id', 'name', 'mobile_number', 'email', 'user', 'supplier', 'customer', 'company']
-
-
-class CountrySerializer(serializers.ModelSerializer):
-    country_city = CitySerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Country
-        fields = ['id', 'name', 'country_city']
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
