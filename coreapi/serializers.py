@@ -46,9 +46,12 @@ class ContactCompanySerializer(serializers.ModelSerializer):
 
 
 class ContactPersonSerializer(serializers.ModelSerializer):
+    created_by = CustomUserSerializer(read_only=True)
+    company = ContactCompanySerializer(read_only=True)
+
     class Meta:
         model = ContactPerson
-        fields = ['id', 'name', 'mobile_number', 'email', 'user', 'supplier', 'customer', 'company']
+        fields = ['id', 'name', 'mobile_number', 'email', 'created_by', 'supplier', 'customer', 'company']
 
 
 class SubCategorySerializer(serializers.ModelSerializer):

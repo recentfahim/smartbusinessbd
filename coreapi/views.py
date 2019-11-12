@@ -187,6 +187,40 @@ class GetContactCompany(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
 
+class GetContactPerson(APIView):
+    def get(self, request):
+        contact_persons = ContactPerson.objects.all()
+
+        contact_persons_serializer = ContactPersonSerializer(contact_persons, many=True)
+
+        context = {
+            'message': 'All contact persons',
+            'data': contact_persons_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        data = request.data
+
+        contact_person = ContactPerson.objects.create(
+            name=data.get('name'),
+            mobile_number=data.get('mobile_number'),
+            email=data.get('email'),
+            supplier=data.get('is_supplier'),
+            customer=data.get('is_customer'),
+            company=ContactCompany.objects.filter(company_name=(data.get('company'))).first(),
+            created_by=CustomUser.objects.filter(username=data.get('created_by')).first()
+        )
+
+        contact_person_serializer = ContactPersonSerializer(contact_person)
+
+        context = {
+            'message': 'Contact person saved successfully',
+            'data': contact_person_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+
 class CategoryView(APIView):
     def get(self, reauest, *args, **kwargs):
         category = Category.objects.get(pk=self.kwargs.get('cat_id'))
@@ -337,6 +371,28 @@ class ContactCompanyView(APIView):
         context = {
             'message': 'Contact company updated successfully',
             'data': contact_company_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class ContactPersonView(APIView):
+    def get(self, request, *args, **kwargs):
+        contact_person = ContactPerson.objects.filter(pk=kwargs.get('contact_person_id')).first()
+        contact_person_serializer = ContactPersonSerializer(contact_person)
+
+        context = {
+            'message': 'Single Contact Person',
+            'data': contact_person_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        contact_person = ContactPerson.objects.filter(pk=kwargs.get('contact_person_id')).first()
+        contact_person.delete()
+        context = {
+            'message': 'Single Contact Person deleted successfully'
         }
 
         return Response(context, status=status.HTTP_200_OK)
