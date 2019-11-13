@@ -4,6 +4,7 @@
     <list default="true" id="e7edbb74-c80f-4850-8daa-d7ddd089e418" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coreapi/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/coreapi/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coreapi/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/coreapi/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coreapi/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/coreapi/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -135,7 +136,7 @@
       <workItem from="1573449065641" duration="48000" />
       <workItem from="1573582549279" duration="2074000" />
       <workItem from="1573620334758" duration="176000" />
-      <workItem from="1573659343959" duration="3618000" />
+      <workItem from="1573659343959" duration="6048000" />
     </task>
     <servers />
   </component>

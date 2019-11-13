@@ -222,6 +222,38 @@ class GetContactPerson(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
 
+class GetCompany(APIView):
+    def get(self, request, *args, **kwargs):
+        return Response('OK')
+
+    def post(self, request, *args, **kwargs):
+        return Response('OK')
+
+
+class GetPartnership(APIView):
+    def get(self, request, *args, **kwargs):
+        return Response('OK')
+
+    def post(self, request, *args, **kwargs):
+        return Response('OK')
+
+
+class GetProduct(APIView):
+    def get(self, request, *args, **kwargs):
+        return Response('OK')
+
+    def post(self, request, *args, **kwargs):
+        return Response('OK')
+
+
+class GetSellRecord(APIView):
+    def get(self, request, *args, **kwargs):
+        return Response('OK')
+
+    def post(self, request, *args, **kwargs):
+        return Response('OK')
+
+
 class CategoryView(APIView):
     def get(self, reauest, *args, **kwargs):
         category = Category.objects.get(pk=self.kwargs.get('cat_id'))
@@ -417,3 +449,47 @@ class ContactPersonView(APIView):
             'data': contact_person_serializer.data
         }
         return Response(context, status=status.HTTP_200_OK)
+
+
+class CompanyView(APIView):
+    def get(self, request, *args, **kwargs):
+        return Response('OK')
+
+    def delete(self, request, *args, **kwargs):
+        return Response('Ok')
+
+    def put(self, request, *args, **kwargs):
+        return Response('OK')
+
+
+class PartnershipView(APIView):
+    def get(self, request, *args, **kwargs):
+        return Response('OK')
+
+    def delete(self, request, *args, **kwargs):
+        return Response('Ok')
+
+    def put(self, request, *args, **kwargs):
+        return Response('OK')
+
+
+class ProductView(APIView):
+    def get(self, request, *args, **kwargs):
+        return Response('OK')
+
+    def delete(self, request, *args, **kwargs):
+        return Response('Ok')
+
+    def put(self, request, *args, **kwargs):
+        return Response('OK')
+
+
+class SellRecordView(APIView):
+    def get(self, request, *args, **kwargs):
+        return Response('OK')
+
+    def delete(self, request, *args, **kwargs):
+        return Response('Ok')
+
+    def put(self, request, *args, **kwargs):
+        return Response('OK')
