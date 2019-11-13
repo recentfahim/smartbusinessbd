@@ -136,7 +136,7 @@
       <workItem from="1573449065641" duration="48000" />
       <workItem from="1573582549279" duration="2074000" />
       <workItem from="1573620334758" duration="176000" />
-      <workItem from="1573659343959" duration="6048000" />
+      <workItem from="1573659343959" duration="8577000" />
     </task>
     <servers />
   </component>
@@ -164,5 +164,15 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/coreapi/serializers.py</url>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

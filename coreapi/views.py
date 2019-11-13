@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Brand, Category, City, ContactCompany, ContactPerson, Country, CustomUser, SubCategory, Product, \
-    Warehouse
+    Warehouse, Product, Partnership, Company, VariantType, ProductVariant, VariantTypeOption
 from .serializers import BrandSerializer, CategorySerializer, CitySerializer, ContactCompanySerializer, ContactPersonSerializer, \
     CountrySerializer, CustomUserSerializer, ProductSerializer, WarehouseSerializer, SubCategorySerializer
 
@@ -232,6 +232,8 @@ class GetCompany(APIView):
 
 class GetPartnership(APIView):
     def get(self, request, *args, **kwargs):
+        partnership = Partnership.objects.all()
+
         return Response('OK')
 
     def post(self, request, *args, **kwargs):

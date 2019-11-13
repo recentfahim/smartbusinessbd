@@ -10,7 +10,7 @@ urlpatterns = [
     path('contact/company/', views.GetContactCompany.as_view(), name='contact_company'),
     path('contact/person/', views.GetContactPerson.as_view(), name='contact_company'),
     path('company/', views.GetCompany.as_view(), name='company'),
-    path('partnership', views.GetPartnership.as_view(), name='partnership'),
+    path('partnership/', views.GetPartnership.as_view(), name='partnership'),
     path('sellrecord/', views.GetSellRecord.as_view(), name='sell_record'),
     path('product/', views.GetProduct.as_view(), name='product'),
     path('category/<int:cat_id>/', views.CategoryView.as_view(), name='category_view'),
@@ -21,4 +21,5 @@ urlpatterns = [
     path('company/<int:company_id>/', views.CompanyView.as_view(), name='company_view'),
     path('partnership/<int:partnership_id>/', views.PartnershipView.as_view(), name='partnership_view'),
     path('product/<int:product_id>/', views.ProductView.as_view(), name='product_view'),
+    path('sellrecord/<int:sellrecord_id>/', views.SellRecordView.as_view(), name='sell_record_view'),
 ]
