@@ -4,7 +4,6 @@
     <list default="true" id="e7edbb74-c80f-4850-8daa-d7ddd089e418" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coreapi/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/coreapi/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coreapi/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/coreapi/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coreapi/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/coreapi/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -52,17 +51,6 @@
         <option value="Python Script" />
       </list>
     </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>”</find>
-      <find>brand</find>
-      <find>ContactCompany</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>&quot;</replace>
-      <replace>0</replace>
-    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -145,7 +133,9 @@
       <workItem from="1573295115220" duration="6385000" />
       <workItem from="1573310281434" duration="6028000" />
       <workItem from="1573449065641" duration="48000" />
-      <workItem from="1573582549279" duration="841000" />
+      <workItem from="1573582549279" duration="2074000" />
+      <workItem from="1573620334758" duration="176000" />
+      <workItem from="1573659343959" duration="3618000" />
     </task>
     <servers />
   </component>

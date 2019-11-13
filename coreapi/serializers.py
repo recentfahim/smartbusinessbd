@@ -11,11 +11,11 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class BrandSerializer(serializers.ModelSerializer):
-    user = CustomUserSerializer(read_only=True)
+    created_by = CustomUserSerializer(read_only=True)
 
     class Meta:
         model = Brand
-        fields = ['id', 'name', 'user', 'logo', 'url', 'is_public']
+        fields = ['id', 'name', 'created_by', 'logo', 'url', 'is_public']
 
 
 class CitySerializer(serializers.ModelSerializer):
@@ -35,13 +35,13 @@ class CountrySerializer(serializers.ModelSerializer):
 class ContactCompanySerializer(serializers.ModelSerializer):
     country = CountrySerializer(read_only=True)
     city = CitySerializer(read_only=True)
-    user = CustomUserSerializer(read_only=True)
+    created_by = CustomUserSerializer(read_only=True)
 
     class Meta:
         model = ContactCompany
         fields = ['id', 'company_name', 'group_reference', 'attention', 'address_1', 'address_2', 'country', 'city',
                   'post_code', 'company_email', 'phone', 'fax', 'mobile_number', 'skype', 'website', 'supplier',
-                  'customer', 'user'
+                  'customer', 'created_by'
                   ]
 
 
@@ -55,20 +55,20 @@ class ContactPersonSerializer(serializers.ModelSerializer):
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
-    user = CustomUserSerializer(read_only=True)
+    created_by = CustomUserSerializer(read_only=True)
 
     class Meta:
         model = SubCategory
-        fields = ['id', 'name', 'description', 'user', 'is_public']
+        fields = ['id', 'name', 'description', 'created_by', 'is_public']
 
 
 class CategorySerializer(serializers.ModelSerializer):
     category_sub_category = SubCategorySerializer(read_only=True, many=True)
-    user = CustomUserSerializer(read_only=True)
+    created_by = CustomUserSerializer(read_only=True)
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'description', 'user', 'is_public', 'category_sub_category']
+        fields = ['id', 'name', 'description', 'created_by', 'is_public', 'category_sub_category']
         read_only_fields = ['get_sub_category']
 
 
@@ -76,11 +76,11 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'item_key', 'item_name', 'stock_alert', 'unit', 'vat', 'description', 'track',
-                  'brand', 'category', 'sub_category', 'user', 'warehouse'
+                  'brand', 'category', 'sub_category', 'created_by', 'warehouse'
                   ]
 
 
 class WarehouseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Warehouse
-        fields = ['id', 'name', 'address', 'phone', 'mobile_number', 'country', 'city', 'email', 'is_primary', 'user']
+        fields = ['id', 'name', 'address', 'phone', 'mobile_number', 'country', 'city', 'email', 'is_primary', 'created_by']

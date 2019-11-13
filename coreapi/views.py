@@ -22,10 +22,11 @@ class GetCategory(APIView):
 
     def post(self, request, *args, **kwargs):
         data = request.data
+        print(data)
         category = Category.objects.create(
             name=data.get('name'),
             description=data.get('description'),
-            user=CustomUser.objects.get(pk=1)
+            created_by=CustomUser.objects.get(pk=1)
         )
         category_serializer = CategorySerializer(category)
         context = {
@@ -52,7 +53,7 @@ class GetSubCategory(APIView):
         sub_category = SubCategory.objects.create(
             name=data.get('name'),
             description=data.get('description'),
-            user=CustomUser.objects.get(pk=1),
+            created_by=CustomUser.objects.get(pk=1),
             category=Category.objects.get(name=data.get('category'))
         )
         sub_category_serializer = SubCategorySerializer(sub_category)
@@ -130,7 +131,7 @@ class GetBrand(APIView):
 
         brand = Brand.objects.create(
             name=data.get('name'),
-            user=CustomUser.objects.get(pk=1),
+            created_by=CustomUser.objects.get(pk=1),
             logo=data.get('logo'),
             url=data.get('url')
         )
@@ -175,7 +176,7 @@ class GetContactCompany(APIView):
             website=data.get('website'),
             supplier=data.get('supplier'),
             customer=data.get('customer'),
-            user=CustomUser.objects.get(pk=1)
+            created_by=CustomUser.objects.get(pk=1)
         )
         contact_company_serializer = ContactCompanySerializer(contact_company)
 
@@ -395,4 +396,24 @@ class ContactPersonView(APIView):
             'message': 'Single Contact Person deleted successfully'
         }
 
+        return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        contact_person = ContactPerson.objects.filter(pk=kwargs.get('contact_person_id')).update(
+            name=data.get('name'),
+            mobile_number=data.get('mobile_number'),
+            email=data.get('email'),
+            supplier=data.get('is_supplier'),
+            customer=data.get('is_customer'),
+            company=ContactCompany.objects.filter(company_name=(data.get('company'))).first(),
+            updated_by=CustomUser.objects.filter(username=data.get('updated_by')).first()
+        )
+
+        contact_person_serializer = ContactPersonSerializer(contact_person)
+
+        context = {
+            'message': 'Contact person updated successfully',
+            'data': contact_person_serializer.data
+        }
         return Response(context, status=status.HTTP_200_OK)
