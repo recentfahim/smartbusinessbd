@@ -3,9 +3,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Brand, Category, City, ContactCompany, ContactPerson, Country, CustomUser, SubCategory, Product, \
-    Warehouse, Product, Partnership, Company, VariantType, ProductVariant, VariantTypeOption
-from .serializers import BrandSerializer, CategorySerializer, CitySerializer, ContactCompanySerializer, ContactPersonSerializer, \
-    CountrySerializer, CustomUserSerializer, ProductSerializer, WarehouseSerializer, SubCategorySerializer
+    Warehouse, Product, Partnership, Company, VariantType, ProductVariant, VariantTypeOption, SellRecord
+from .serializers import BrandSerializer, CategorySerializer, CitySerializer, ContactCompanySerializer, \
+    ContactPersonSerializer, CountrySerializer, CustomUserSerializer, ProductSerializer, WarehouseSerializer, \
+    SubCategorySerializer, CompanySerializer, PartnershipSerializer, SellRecordSerializer
 
 
 class GetCategory(APIView):
@@ -224,17 +225,52 @@ class GetContactPerson(APIView):
 
 class GetCompany(APIView):
     def get(self, request, *args, **kwargs):
-        return Response('OK')
+        companies = Company.objects.all()
+        company_serializer = CompanySerializer(companies, many=True)
+
+        context = {
+            'message': 'All companies',
+            'data': company_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        return Response('OK')
+        data = request.data
+        print(data)
+        company = Company.objects.create(
+            name=data.get('company_name'),
+            website=data.get('company_website'),
+            email=data.get('company_email'),
+            address=data.get('company_address'),
+            city=City.objects.get(name=data.get('company_city')),
+            region=data.get('company_region'),
+            postcode=data.get('company_postcode'),
+            country=Country.objects.get(name=data.get('company_country')),
+            phone=data.get('company_phone'),
+            fax=data.get('company_fax'),
+            image=data.get('company_image'),
+            logo=data.get('company_logo'),
+            created_by=CustomUser.objects.get(username=data.get('company_created_by')),
+        )
+        company_serializer = CompanySerializer(company)
+        context = {
+            'message': 'Company Created Successfully',
+            'data': company_serializer.data
+
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class GetPartnership(APIView):
     def get(self, request, *args, **kwargs):
         partnership = Partnership.objects.all()
+        partnership_serializer = PartnershipSerializer(partnership, many=True)
+        context = {
+            'message': 'All Partnerships',
+            'data': partnership_serializer.data
+        }
 
-        return Response('OK')
+        return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         return Response('OK')
@@ -242,7 +278,14 @@ class GetPartnership(APIView):
 
 class GetProduct(APIView):
     def get(self, request, *args, **kwargs):
-        return Response('OK')
+        products = Product.objects.all()
+        product_serializer = ProductSerializer(products, many=True)
+        context = {
+            'message': 'All Products',
+            'data': product_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         return Response('OK')
@@ -250,6 +293,12 @@ class GetProduct(APIView):
 
 class GetSellRecord(APIView):
     def get(self, request, *args, **kwargs):
+        sell_records = SellRecord.objects.all()
+        sell_record_serializer = SellRecordSerializer(sell_records, many=True)
+        context = {
+            'message': 'All Sell Records',
+            'data': sell_record_serializer.data
+        }
         return Response('OK')
 
     def post(self, request, *args, **kwargs):
