@@ -3,10 +3,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Brand, Category, City, ContactCompany, ContactPerson, Country, CustomUser, SubCategory, Product, \
-    Warehouse, Product, Partnership, Company, VariantType, ProductVariant, VariantTypeOption, SellRecord
+    Warehouse, Product, Partnership, Company, VariantType, ProductVariant, VariantTypeOption, SellRecord, EcommerceSite
 from .serializers import BrandSerializer, CategorySerializer, CitySerializer, ContactCompanySerializer, \
     ContactPersonSerializer, CountrySerializer, CustomUserSerializer, ProductSerializer, WarehouseSerializer, \
-    SubCategorySerializer, CompanySerializer, PartnershipSerializer, SellRecordSerializer
+    SubCategorySerializer, CompanySerializer, PartnershipSerializer, SellRecordSerializer, EcommerceSiteSerializer
 
 
 class GetCategory(APIView):
@@ -338,6 +338,34 @@ class GetSellRecord(APIView):
 
     def post(self, request, *args, **kwargs):
         return Response('OK')
+
+
+class GetOnlineSore(APIView):
+    def get(self, request, *args, **kwargs):
+        online_stores = EcommerceSite.objects.all()
+        online_stores_serializer = EcommerceSiteSerializer(online_stores, many=True)
+        context = {
+            'message': 'All E-commerce',
+            'data': online_stores_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        online_store = EcommerceSite.objects.create(
+            name=data.get('online_store_name'),
+            logo=data.get('online_store_logo_path'),
+            website=data.get('online_store_website'),
+            shop_link=data.get('online_store_shop_link'),
+            created_by=CustomUser.objects.filter(username=data.get('online_store_created_by')).first(),
+        )
+        online_store_serializer = EcommerceSiteSerializer(online_store)
+        context = {
+            'message': 'E-commerce Created Successfully',
+            'data': online_store_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class CategoryView(APIView):
@@ -675,3 +703,38 @@ class SellRecordView(APIView):
 
     def put(self, request, *args, **kwargs):
         return Response('OK')
+
+
+class OnlineStoreView(APIView):
+    def get(self, request, *args, **kwargs):
+        online_store = EcommerceSite.objects.filter(pk=kwargs.get('e_commerce_id')).first()
+        online_store_serializer = EcommerceSiteSerializer(online_store)
+        context = {
+            'message': 'Single E-commerce',
+            'data': online_store_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        online_store = EcommerceSite.objects.filter(pk=kwargs.get('e_commerce_id')).first()
+        online_store.delete()
+        context = {
+            'message': 'E-commerce Deleted Successfully'
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        EcommerceSite.objects.filter(pk=kwargs.get('e_commerce_id')).update(
+            name=data.get('online_store_name'),
+            logo=data.get('online_store_logo_path'),
+            website=data.get('online_store_website'),
+            shop_link=data.get('online_store_shop_link'),
+            updated_by=CustomUser.objects.filter(username=data.get('online_store_updated_by')).first(),
+        )
+        context = {
+            'message': 'E-commerce Updated Successfully',
+        }
+
+        return Response(context, status=status.HTTP_200_OK)

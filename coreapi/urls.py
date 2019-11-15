@@ -13,6 +13,7 @@ urlpatterns = [
     path('partnership/', views.GetPartnership.as_view(), name='partnership'),
     path('sellrecord/', views.GetSellRecord.as_view(), name='sell_record'),
     path('product/', views.GetProduct.as_view(), name='product'),
+    path('e-commerce/', views.GetOnlineSore.as_view(), name='e_commerce'),
     path('category/<int:cat_id>/', views.CategoryView.as_view(), name='category_view'),
     path('subcategory/<int:sub_cat_id>/', views.SubCategoryView.as_view(), name='subcategory_view'),
     path('brand/<int:brand_id>/', views.BrandView.as_view(), name='brand_view'),
@@ -22,4 +23,5 @@ urlpatterns = [
     path('partnership/<int:partnership_id>/', views.PartnershipView.as_view(), name='partnership_view'),
     path('product/<int:product_id>/', views.ProductView.as_view(), name='product_view'),
     path('sell_record/<int:sell_record_id>/', views.SellRecordView.as_view(), name='sell_record_view'),
+    path('e-commerce/<int:e_commerce_id>/', views.OnlineStoreView.as_view(), name='e_commerce_view'),
 ]
