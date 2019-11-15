@@ -324,6 +324,7 @@ class SellRecord(models.Model):
 
 
 class Partnership(models.Model):
+    partner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='partner_user', blank=True, null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='company_partnership',
                                 blank=True, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_partnership',

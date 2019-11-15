@@ -3,9 +3,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Brand, Category, City, ContactCompany, ContactPerson, Country, CustomUser, SubCategory, Product, \
-    Warehouse
-from .serializers import BrandSerializer, CategorySerializer, CitySerializer, ContactCompanySerializer, ContactPersonSerializer, \
-    CountrySerializer, CustomUserSerializer, ProductSerializer, WarehouseSerializer, SubCategorySerializer
+    Warehouse, Product, Partnership, Company, VariantType, ProductVariant, VariantTypeOption, SellRecord
+from .serializers import BrandSerializer, CategorySerializer, CitySerializer, ContactCompanySerializer, \
+    ContactPersonSerializer, CountrySerializer, CustomUserSerializer, ProductSerializer, WarehouseSerializer, \
+    SubCategorySerializer, CompanySerializer, PartnershipSerializer, SellRecordSerializer
 
 
 class GetCategory(APIView):
@@ -22,10 +23,11 @@ class GetCategory(APIView):
 
     def post(self, request, *args, **kwargs):
         data = request.data
+        print(data)
         category = Category.objects.create(
             name=data.get('name'),
             description=data.get('description'),
-            user=CustomUser.objects.get(pk=1)
+            created_by=CustomUser.objects.get(pk=1)
         )
         category_serializer = CategorySerializer(category)
         context = {
@@ -52,7 +54,7 @@ class GetSubCategory(APIView):
         sub_category = SubCategory.objects.create(
             name=data.get('name'),
             description=data.get('description'),
-            user=CustomUser.objects.get(pk=1),
+            created_by=CustomUser.objects.get(pk=1),
             category=Category.objects.get(name=data.get('category'))
         )
         sub_category_serializer = SubCategorySerializer(sub_category)
@@ -130,7 +132,7 @@ class GetBrand(APIView):
 
         brand = Brand.objects.create(
             name=data.get('name'),
-            user=CustomUser.objects.get(pk=1),
+            created_by=CustomUser.objects.get(pk=1),
             logo=data.get('logo'),
             url=data.get('url')
         )
@@ -175,7 +177,7 @@ class GetContactCompany(APIView):
             website=data.get('website'),
             supplier=data.get('supplier'),
             customer=data.get('customer'),
-            user=CustomUser.objects.get(pk=1)
+            created_by=CustomUser.objects.get(pk=1)
         )
         contact_company_serializer = ContactCompanySerializer(contact_company)
 
@@ -185,6 +187,136 @@ class GetContactCompany(APIView):
         }
 
         return Response(context, status=status.HTTP_200_OK)
+
+
+class GetContactPerson(APIView):
+    def get(self, request):
+        contact_persons = ContactPerson.objects.all()
+
+        contact_persons_serializer = ContactPersonSerializer(contact_persons, many=True)
+
+        context = {
+            'message': 'All contact persons',
+            'data': contact_persons_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        data = request.data
+
+        contact_person = ContactPerson.objects.create(
+            name=data.get('name'),
+            mobile_number=data.get('mobile_number'),
+            email=data.get('email'),
+            supplier=data.get('is_supplier'),
+            customer=data.get('is_customer'),
+            company=ContactCompany.objects.filter(company_name=(data.get('company'))).first(),
+            created_by=CustomUser.objects.filter(username=data.get('created_by')).first()
+        )
+
+        contact_person_serializer = ContactPersonSerializer(contact_person)
+
+        context = {
+            'message': 'Contact person saved successfully',
+            'data': contact_person_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class GetCompany(APIView):
+    def get(self, request, *args, **kwargs):
+        companies = Company.objects.all()
+        company_serializer = CompanySerializer(companies, many=True)
+
+        context = {
+            'message': 'All companies',
+            'data': company_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        print(data)
+        company = Company.objects.create(
+            name=data.get('company_name'),
+            website=data.get('company_website'),
+            email=data.get('company_email'),
+            address=data.get('company_address'),
+            city=City.objects.get(name=data.get('company_city')),
+            region=data.get('company_region'),
+            postcode=data.get('company_postcode'),
+            country=Country.objects.get(name=data.get('company_country')),
+            phone=data.get('company_phone'),
+            fax=data.get('company_fax'),
+            image=data.get('company_image'),
+            logo=data.get('company_logo'),
+            created_by=CustomUser.objects.get(username=data.get('company_created_by')),
+        )
+        company_serializer = CompanySerializer(company)
+        context = {
+            'message': 'Company Created Successfully',
+            'data': company_serializer.data
+
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class GetPartnership(APIView):
+    def get(self, request, *args, **kwargs):
+        partnership = Partnership.objects.all()
+        partnership_serializer = PartnershipSerializer(partnership, many=True)
+        context = {
+            'message': 'All Partnerships',
+            'data': partnership_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+
+        partner = Partnership.objects.create(
+            partner=CustomUser.objects.filter(username=data.get('partner_username')).first(),
+            company=Company.objects.filter(name=data.get('partner_company')).first(),
+            product=Product.objects.filter(item_name=data.get('partner_product')).first(),
+            percentage=data.get('partnership_percentage'),
+            created_by=CustomUser.objects.filter(username=data.get('partner_created_by')).first()
+        )
+        partner_serializer = PartnershipSerializer(partner)
+        context = {
+            'message': 'Partner created successfully',
+            'data': partner_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class GetProduct(APIView):
+    def get(self, request, *args, **kwargs):
+        products = Product.objects.all()
+        product_serializer = ProductSerializer(products, many=True)
+        context = {
+            'message': 'All Products',
+            'data': product_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        return Response('OK')
+
+
+class GetSellRecord(APIView):
+    def get(self, request, *args, **kwargs):
+        sell_records = SellRecord.objects.all()
+        sell_record_serializer = SellRecordSerializer(sell_records, many=True)
+        context = {
+            'message': 'All Sell Records',
+            'data': sell_record_serializer.data
+        }
+        return Response('OK')
+
+    def post(self, request, *args, **kwargs):
+        return Response('OK')
 
 
 class CategoryView(APIView):
@@ -340,3 +472,169 @@ class ContactCompanyView(APIView):
         }
 
         return Response(context, status=status.HTTP_200_OK)
+
+
+class ContactPersonView(APIView):
+    def get(self, request, *args, **kwargs):
+        contact_person = ContactPerson.objects.filter(pk=kwargs.get('contact_person_id')).first()
+        contact_person_serializer = ContactPersonSerializer(contact_person)
+
+        context = {
+            'message': 'Single Contact Person',
+            'data': contact_person_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        contact_person = ContactPerson.objects.filter(pk=kwargs.get('contact_person_id')).first()
+        contact_person.delete()
+        context = {
+            'message': 'Single Contact Person deleted successfully'
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        contact_person = ContactPerson.objects.filter(pk=kwargs.get('contact_person_id')).update(
+            name=data.get('name'),
+            mobile_number=data.get('mobile_number'),
+            email=data.get('email'),
+            supplier=data.get('is_supplier'),
+            customer=data.get('is_customer'),
+            company=ContactCompany.objects.filter(company_name=(data.get('company'))).first(),
+            updated_by=CustomUser.objects.filter(username=data.get('updated_by')).first()
+        )
+
+        contact_person_serializer = ContactPersonSerializer(contact_person)
+
+        context = {
+            'message': 'Contact person updated successfully',
+            'data': contact_person_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class CompanyView(APIView):
+    def get(self, request, *args, **kwargs):
+        company = Company.objects.filter(pk=kwargs.get('company_id'))
+        company_serializer = CompanySerializer(company)
+        context = {
+            'message': 'Single Company',
+            'data': company_serializer.data
+        }
+        return Response('OK')
+
+    def delete(self, request, *args, **kwargs):
+        company = Company.objects.filter(pk=kwargs.get('company_id'))
+        company.delete()
+        context = {
+            'message': 'Company Deleted Successfully'
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        data = request.data
+
+        Company.objects.filter(pk=kwargs.get('company_id')).update(
+            name=data.get('company_name'),
+            website=data.get('company_website'),
+            email=data.get('company_email'),
+            address=data.get('company_address'),
+            city=City.objects.get(name=data.get('company_city')),
+            region=data.get('company_region'),
+            postcode=data.get('company_postcode'),
+            country=Country.objects.get(name=data.get('company_country')),
+            phone=data.get('company_phone'),
+            fax=data.get('company_fax'),
+            image=data.get('company_image'),
+            logo=data.get('company_logo'),
+            updated_by=CustomUser.objects.get(username=data.get('company_created_by')),
+        )
+        context = {
+            'message': 'Company updated successfully'
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class PartnershipView(APIView):
+    def get(self, request, *args, **kwargs):
+        partner = Partnership.objects.filter(pk=kwargs.get('partnership_id')).first()
+        partner_serializer = PartnershipSerializer(partner)
+        context = {
+            'message': 'Single Partners',
+            'data': partner_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        partner = Partnership.objects.filter(pk=kwargs.get('partnership_id'))
+        partner.delete()
+        context = {
+            'message': 'Partner Deleted Successfully'
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        partner = Partnership.objects.filter(pk=kwargs.get('partnership_id')).update(
+            partner=CustomUser.objects.filter(username=data.get('partner_username')).first(),
+            company=Company.objects.filter(name=data.get('partner_company')).first(),
+            product=Product.objects.filter(item_name=data.get('partner_product')).first(),
+            percentage=data.get('partnership_percentage'),
+            updated_by=CustomUser.objects.filter(username=data.get('partner_created_by')).first()
+        )
+        partner_serializer = PartnershipSerializer(partner)
+        context = {
+            'message': 'Partner updated successfully',
+            'data': partner_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class ProductView(APIView):
+    def get(self, request, *args, **kwargs):
+        product = Product.objects.filter(pk=kwargs.get('product_id'))
+        product_serializer = ProductSerializer(product)
+        context = {
+            'message': 'Single products',
+            'data': product_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        product = Product.objects.filter(pk=kwargs.get('product_id'))
+        product.delete()
+        context = {
+            'message': 'Product delete successfully'
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+
+        return Response('OK')
+
+
+class SellRecordView(APIView):
+    def get(self, request, *args, **kwargs):
+        sell_record = SellRecord.objects.filter(pk=kwargs.get('sell_record_id'))
+        sell_record_serializer = ProductSerializer(sell_record)
+        context = {
+            'message': 'Single Sell Record',
+            'data': sell_record_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        sell_record = SellRecord.objects.filter(pk=kwargs.get('sell_record_id'))
+        sell_record.delete()
+        context = {
+            'message': 'Sell Record delete successfully'
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        return Response('OK')
