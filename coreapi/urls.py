@@ -21,5 +21,5 @@ urlpatterns = [
     path('company/<int:company_id>/', views.CompanyView.as_view(), name='company_view'),
     path('partnership/<int:partnership_id>/', views.PartnershipView.as_view(), name='partnership_view'),
     path('product/<int:product_id>/', views.ProductView.as_view(), name='product_view'),
-    path('sellrecord/<int:sellrecord_id>/', views.SellRecordView.as_view(), name='sell_record_view'),
+    path('sell_record/<int:sell_record_id>/', views.SellRecordView.as_view(), name='sell_record_view'),
 ]

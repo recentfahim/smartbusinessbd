@@ -131,10 +131,11 @@ class PartnershipSerializer(serializers.ModelSerializer):
     company = CompanySerializer(read_only=True)
     product = ProductSerializer(read_only=True)
     created_by = CustomUserSerializer(read_only=True)
+    partner = CustomUserSerializer(read_only=True)
 
     class Meta:
         model = Partnership
-        fields = ['id', 'company', 'product', 'percentage', 'created_by']
+        fields = ['id', 'partner', 'company', 'product', 'percentage', 'created_by']
 
 
 class EcommerceSiteSerializer(serializers.ModelSerializer):

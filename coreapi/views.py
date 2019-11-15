@@ -273,7 +273,21 @@ class GetPartnership(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        return Response('OK')
+        data = request.data
+
+        partner = Partnership.objects.create(
+            partner=CustomUser.objects.filter(username=data.get('partner_username')).first(),
+            company=Company.objects.filter(name=data.get('partner_company')).first(),
+            product=Product.objects.filter(item_name=data.get('partner_product')).first(),
+            percentage=data.get('partnership_percentage'),
+            created_by=CustomUser.objects.filter(username=data.get('partner_created_by')).first()
+        )
+        partner_serializer = PartnershipSerializer(partner)
+        context = {
+            'message': 'Partner created successfully',
+            'data': partner_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class GetProduct(APIView):
@@ -504,43 +518,123 @@ class ContactPersonView(APIView):
 
 class CompanyView(APIView):
     def get(self, request, *args, **kwargs):
+        company = Company.objects.filter(pk=kwargs.get('company_id'))
+        company_serializer = CompanySerializer(company)
+        context = {
+            'message': 'Single Company',
+            'data': company_serializer.data
+        }
         return Response('OK')
 
     def delete(self, request, *args, **kwargs):
-        return Response('Ok')
+        company = Company.objects.filter(pk=kwargs.get('company_id'))
+        company.delete()
+        context = {
+            'message': 'Company Deleted Successfully'
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
-        return Response('OK')
+        data = request.data
+
+        Company.objects.filter(pk=kwargs.get('company_id')).update(
+            name=data.get('company_name'),
+            website=data.get('company_website'),
+            email=data.get('company_email'),
+            address=data.get('company_address'),
+            city=City.objects.get(name=data.get('company_city')),
+            region=data.get('company_region'),
+            postcode=data.get('company_postcode'),
+            country=Country.objects.get(name=data.get('company_country')),
+            phone=data.get('company_phone'),
+            fax=data.get('company_fax'),
+            image=data.get('company_image'),
+            logo=data.get('company_logo'),
+            updated_by=CustomUser.objects.get(username=data.get('company_created_by')),
+        )
+        context = {
+            'message': 'Company updated successfully'
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class PartnershipView(APIView):
     def get(self, request, *args, **kwargs):
-        return Response('OK')
+        partner = Partnership.objects.filter(pk=kwargs.get('partnership_id')).first()
+        partner_serializer = PartnershipSerializer(partner)
+        context = {
+            'message': 'Single Partners',
+            'data': partner_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        return Response('Ok')
+        partner = Partnership.objects.filter(pk=kwargs.get('partnership_id'))
+        partner.delete()
+        context = {
+            'message': 'Partner Deleted Successfully'
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
-        return Response('OK')
+        data = request.data
+        partner = Partnership.objects.filter(pk=kwargs.get('partnership_id')).update(
+            partner=CustomUser.objects.filter(username=data.get('partner_username')).first(),
+            company=Company.objects.filter(name=data.get('partner_company')).first(),
+            product=Product.objects.filter(item_name=data.get('partner_product')).first(),
+            percentage=data.get('partnership_percentage'),
+            updated_by=CustomUser.objects.filter(username=data.get('partner_created_by')).first()
+        )
+        partner_serializer = PartnershipSerializer(partner)
+        context = {
+            'message': 'Partner updated successfully',
+            'data': partner_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class ProductView(APIView):
     def get(self, request, *args, **kwargs):
-        return Response('OK')
+        product = Product.objects.filter(pk=kwargs.get('product_id'))
+        product_serializer = ProductSerializer(product)
+        context = {
+            'message': 'Single products',
+            'data': product_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        return Response('Ok')
+        product = Product.objects.filter(pk=kwargs.get('product_id'))
+        product.delete()
+        context = {
+            'message': 'Product delete successfully'
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
+
         return Response('OK')
 
 
 class SellRecordView(APIView):
     def get(self, request, *args, **kwargs):
-        return Response('OK')
+        sell_record = SellRecord.objects.filter(pk=kwargs.get('sell_record_id'))
+        sell_record_serializer = ProductSerializer(sell_record)
+        context = {
+            'message': 'Single Sell Record',
+            'data': sell_record_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        return Response('Ok')
+        sell_record = SellRecord.objects.filter(pk=kwargs.get('sell_record_id'))
+        sell_record.delete()
+        context = {
+            'message': 'Sell Record delete successfully'
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
         return Response('OK')
