@@ -131,10 +131,10 @@ class GetBrand(APIView):
         data = request.data
 
         brand = Brand.objects.create(
-            name=data.get('name'),
-            created_by=CustomUser.objects.get(pk=1),
-            logo=data.get('logo'),
-            url=data.get('url')
+            name=data.get('brand_name'),
+            created_by=CustomUser.objects.get(username=data.get('brand_created_by')),
+            logo=data.get('brand_logo'),
+            url=data.get('brand_url')
         )
         brand_serializer = BrandSerializer(brand)
         context = {
@@ -302,7 +302,28 @@ class GetProduct(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        return Response('OK')
+        data = request.data
+        product = Product.objects.create(
+            item_key=data.get('product_key'),
+            item_name=data.get('product_name'),
+            stock_alert=data.get('product_stock_alert'),
+            unit=data.get('product_unit'),
+            vat=data.get('product_vat'),
+            description=data.get('product_description'),
+            track=data.get('product_tract'),
+            brand=Brand.objects.filter(name=data.get('product_brand')).first(),
+            category=Category.objects.filter(name=data.get('product_category')).first(),
+            sub_category=SubCategory.objects.filter(name=data.get('product_sub_category')).first(),
+            warehouse=Warehouse.objects.filter(name=data.get('product_warehouse')).first(),
+            company=Company.objects.filter(name=data.get('product_company')).first(),
+            created_by=CustomUser.objects.filter(username=data.get('product_created_by')).first(),
+        )
+        product_serializer = ProductSerializer(product)
+        context = {
+            'message': 'Product Created Successfully',
+            'data': product_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class GetSellRecord(APIView):
@@ -586,17 +607,15 @@ class PartnershipView(APIView):
             percentage=data.get('partnership_percentage'),
             updated_by=CustomUser.objects.filter(username=data.get('partner_created_by')).first()
         )
-        partner_serializer = PartnershipSerializer(partner)
         context = {
             'message': 'Partner updated successfully',
-            'data': partner_serializer.data
         }
         return Response(context, status=status.HTTP_200_OK)
 
 
 class ProductView(APIView):
     def get(self, request, *args, **kwargs):
-        product = Product.objects.filter(pk=kwargs.get('product_id'))
+        product = Product.objects.filter(pk=kwargs.get('product_id')).first()
         product_serializer = ProductSerializer(product)
         context = {
             'message': 'Single products',
@@ -606,7 +625,7 @@ class ProductView(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        product = Product.objects.filter(pk=kwargs.get('product_id'))
+        product = Product.objects.filter(pk=kwargs.get('product_id')).first()
         product.delete()
         context = {
             'message': 'Product delete successfully'
@@ -614,8 +633,26 @@ class ProductView(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
-
-        return Response('OK')
+        data = request.data
+        product = Product.objects.filter(pk=kwargs.get('product_id')).update(
+            item_key=data.get('product_key'),
+            item_name=data.get('product_name'),
+            stock_alert=data.get('product_stock_alert'),
+            unit=data.get('product_unit'),
+            vat=data.get('product_vat'),
+            description=data.get('product_description'),
+            track=data.get('product_tract'),
+            brand=Brand.objects.filter(name=data.get('product_brand')).first(),
+            category=Category.objects.filter(name=data.get('product_category')).first(),
+            sub_category=SubCategory.objects.filter(name=data.get('product_sub_category')).first(),
+            warehouse=Warehouse.objects.filter(name=data.get('product_warehouse')).first(),
+            company=Company.objects.filter(name=data.get('product_company')).first(),
+            updated_by=CustomUser.objects.filter(username=data.get('product_updated_by')).first(),
+        )
+        context = {
+            'message': 'Product Updated Successfully',
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class SellRecordView(APIView):

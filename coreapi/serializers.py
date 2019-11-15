@@ -85,11 +85,15 @@ class CompanySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    brand = BrandSerializer(read_only=True)
+    category = CategorySerializer(read_only=True)
+    sub_category = SubCategorySerializer(read_only=True)
+    created_by = CustomUserSerializer(read_only=True)
+
     class Meta:
         model = Product
         fields = ['id', 'item_key', 'item_name', 'stock_alert', 'unit', 'vat', 'description', 'track',
-                  'brand', 'category', 'sub_category', 'created_by', 'warehouse'
-                  ]
+                  'brand', 'category', 'sub_category', 'created_by', 'warehouse']
 
 
 class WarehouseSerializer(serializers.ModelSerializer):
