@@ -3,10 +3,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Brand, Category, City, ContactCompany, ContactPerson, Country, CustomUser, SubCategory, Product, \
-    Warehouse, Product, Partnership, Company, VariantType, ProductVariant, VariantTypeOption, SellRecord, EcommerceSite
+    Warehouse, Product, Partnership, Company, VariantType, ProductVariant, VariantTypeOption, SellRecord, \
+    EcommerceSite, EcommerceHasProduct
 from .serializers import BrandSerializer, CategorySerializer, CitySerializer, ContactCompanySerializer, \
     ContactPersonSerializer, CountrySerializer, CustomUserSerializer, ProductSerializer, WarehouseSerializer, \
-    SubCategorySerializer, CompanySerializer, PartnershipSerializer, SellRecordSerializer, EcommerceSiteSerializer
+    SubCategorySerializer, CompanySerializer, PartnershipSerializer, SellRecordSerializer, EcommerceSiteSerializer, \
+    EcommerceHasProductSerializer
 
 
 class GetCategory(APIView):
@@ -334,10 +336,22 @@ class GetSellRecord(APIView):
             'message': 'All Sell Records',
             'data': sell_record_serializer.data
         }
-        return Response('OK')
+        return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        return Response('OK')
+        data = request.data
+        sell_record = SellRecord.objects.create(
+            price=data.get('sell_record_price'),
+            quantity=data.get('sell_record_quantity'),
+            ecommerce_has_product=EcommerceHasProduct.objects.filter(pk=data.get('sell_record_store_has_product')).first(),
+            created_by=CustomUser.objects.filter(username=data.get('sell_record_created_by')).first()
+        )
+        sell_record_serializer = SellRecordSerializer(sell_record)
+        context = {
+            'message': 'Sell Record Created Successfully',
+            'data': sell_record_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class GetOnlineSore(APIView):
@@ -364,6 +378,34 @@ class GetOnlineSore(APIView):
         context = {
             'message': 'E-commerce Created Successfully',
             'data': online_store_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class GetOnlineStoreHasProduct(APIView):
+    def get(self, request, *args, **kwargs):
+        store_product = EcommerceHasProduct.objects.all()
+        store_product_serializer = EcommerceHasProductSerializer(store_product, many=True)
+        context = {
+            'message': 'All Online Store has Product',
+            'data': store_product_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        store_product = EcommerceHasProduct.objects.create(
+            price=data.get('store_product_price'),
+            quantity=data.get('store_product_quantity'),
+            product=Product.objects.filter(item_name=data.get('store_product_product')).first(),
+            ecommerce=EcommerceSite.objects.filter(name=data.get('store_product_e_commerce')).first(),
+            created_by=CustomUser.objects.filter(username=data.get('store_product_created_by')).first(),
+        )
+        store_product_serializer = EcommerceHasProductSerializer(store_product)
+        context = {
+            'message': 'Online store has product created successfully',
+            'data': store_product_serializer.data
         }
         return Response(context, status=status.HTTP_200_OK)
 
@@ -702,7 +744,17 @@ class SellRecordView(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
-        return Response('OK')
+        data = request.data
+        sell_record = SellRecord.objects.filter(pk=kwargs.get('sell_record_id')).update(
+            price=data.get('sell_record_price'),
+            quantity=data.get('sell_record_quantity'),
+            ecommerce_has_product=data.get('sell_record_store_has_product'),
+            updated_by=data.get('sell_record_updated_by')
+        )
+        context = {
+            'message': 'Sell Record updated successfully'
+        }
+        return Response(context, status=status.HTTP_200_OK)
 
 
 class OnlineStoreView(APIView):
@@ -735,6 +787,42 @@ class OnlineStoreView(APIView):
         )
         context = {
             'message': 'E-commerce Updated Successfully',
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class OnlineStoreHasProductView(APIView):
+    def get(self, request, *args, **kwargs):
+        store_has_product = EcommerceSite.objects.filter(pk=kwargs.get('e_commerce_has_product_id')).first()
+        store_has_product_serializer = EcommerceHasProductSerializer(store_has_product)
+        context = {
+            'message': 'Single Online Store has Product',
+            'data': store_has_product_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        store_has_product = EcommerceSite.objects.filter(pk=kwargs.get('e_commerce_has_product_id'))
+        store_has_product.delete()
+        context = {
+            'message': 'Online Store has Product deleted successfully',
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        store_product = EcommerceHasProduct.objects.filter(pk=kwargs.get('e_commerce_has_product_id')).update(
+            price=data.get('store_product_price'),
+            quantity=data.get('store_product_quantity'),
+            product=Product.objects.filter(item_name=data.get('store_product_product')).first(),
+            ecommerce=EcommerceSite.objects.filter(name=data.get('store_product_e_commerce')).first(),
+            updated_by=CustomUser.objects.filter(username=data.get('store_product_updated_by')).first(),
+        )
+        context = {
+            'message': 'Online Store has product updated successfully',
         }
 
         return Response(context, status=status.HTTP_200_OK)

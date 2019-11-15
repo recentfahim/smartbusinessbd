@@ -153,10 +153,11 @@ class EcommerceSiteSerializer(serializers.ModelSerializer):
 class EcommerceHasProductSerializer(serializers.ModelSerializer):
     ecommerce = EcommerceSiteSerializer(read_only=True)
     created_by = CustomUserSerializer(read_only=True)
+    product = ProductSerializer(read_only=True)
 
     class Meta:
         model = EcommerceHasProduct
-        fields = ['id', 'price', 'quantity', 'ecommerce', 'created_by']
+        fields = ['id', 'price', 'quantity', 'product', 'ecommerce', 'created_by']
 
 
 class SellRecordSerializer(serializers.ModelSerializer):
