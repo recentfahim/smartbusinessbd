@@ -8,7 +8,7 @@ from .models import Brand, Category, City, ContactCompany, ContactPerson, Countr
 from .serializers import BrandSerializer, CategorySerializer, CitySerializer, ContactCompanySerializer, \
     ContactPersonSerializer, CountrySerializer, CustomUserSerializer, ProductSerializer, WarehouseSerializer, \
     SubCategorySerializer, CompanySerializer, PartnershipSerializer, SellRecordSerializer, EcommerceSiteSerializer, \
-    EcommerceHasProductSerializer
+    EcommerceHasProductSerializer, VariantTypeSerializer, VariantTypeOptionSerializer, ProductVariantSerializer
 
 
 class GetCategory(APIView):
@@ -407,6 +407,91 @@ class GetOnlineStoreHasProduct(APIView):
             'message': 'Online store has product created successfully',
             'data': store_product_serializer.data
         }
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class GetVariantType(APIView):
+    def get(self, request, *args, **kwargs):
+        variant_type = VariantType.objects.all()
+        variant_type_serializer = VariantTypeSerializer(variant_type, many=True)
+        context = {
+            'message': 'All variants',
+            'data': variant_type_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        variant_type = VariantType.objects.create(
+            name=data.get('variant_type_name'),
+            created_by=CustomUser.objects.filter(username=data.get('variant_type_created_by')).first()
+        )
+        variant_type_serializer = VariantTypeSerializer(variant_type)
+        context = {
+            'message': 'All Variant types',
+            'data': variant_type_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class GetVariantTypeOption(APIView):
+    def get(self, request, *args, **kwargs):
+        variant_type_option = VariantTypeOption.objects.all()
+        variant_type_option_serializer = VariantTypeOptionSerializer(variant_type_option, many=True)
+        context = {
+            'message': 'All variants',
+            'data': variant_type_option_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        variant_type_option = VariantTypeOption.objects.create(
+            name=data.get('variant_type_option_name'),
+            variant_type=VariantType.objects.filter(name=data.get('variant_type')).first(),
+            created_by=CustomUser.objects.filter(username=data.get('variant_type_option_created_by')).first()
+        )
+        variant_type_option_serializer = VariantTypeOptionSerializer(variant_type_option)
+        context = {
+            'message': 'All Variant Type Options',
+            'data': variant_type_option_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class GetProductVariant(APIView):
+    def get(self, request, *args, **kwargs):
+        product_variant = ProductVariant.objects.all()
+        product_variant_serializer = ProductVariantSerializer(product_variant, many=True)
+        context = {
+            'message': 'All Product Variants',
+            'data': product_variant_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        product_variant = ProductVariant.objects.create(
+            name=data.get('product_variant_name'),
+            purchase_price=data.get('product_variant_purchase_price'),
+            selling_price=data.get('product_variant_selling_price'),
+            quantity=data.get('product_variant_quantity'),
+            product=Product.objects.filter(item_name=data.get('product_variant_product')).first(),
+            variant_type=VariantType.objects.filter(name=data.get('product_variant_variant_type')).first(),
+            variant_type_option=VariantTypeOption.objects.filter(name=data.get('product_variant_variant_type_option').first()),
+            created_by=CustomUser.objects.filter(username=data.get('product_variant_created_by')).first(),
+        )
+        product_variant_serializer = ProductVariantSerializer(product_variant)
+        context = {
+            'message': 'Product Variant Created successfully',
+            'data': product_variant_serializer.data
+        }
+
         return Response(context, status=status.HTTP_200_OK)
 
 
@@ -823,6 +908,111 @@ class OnlineStoreHasProductView(APIView):
         )
         context = {
             'message': 'Online Store has product updated successfully',
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class VariantTypeView(APIView):
+    def get(self, request, *args, **kwargs):
+        variant_type = VariantType.objects.filter(pk=kwargs.get('variant_type_id')).first()
+        variant_type_serializer = VariantTypeSerializer(variant_type)
+        context = {
+            'message': 'Single Variant Type',
+            'data': variant_type_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        variant_type = VariantType.objects.filter(pk=kwargs.get('variant_type_id')).first()
+        variant_type.delete()
+        context = {
+            'message': 'Variant type deleted successfully'
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        VariantType.objects.filter(pk=kwargs.get('variant_type_id')).update(
+            name=data.get('variant_type_name'),
+            updated_by=CustomUser.objects.filter(username=data.get('variant_type_updated_by')).first()
+        )
+        context = {
+            'message': 'Variant type updated successfully'
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class VariantTypeOptionView(APIView):
+    def get(self, request, *args, **kwargs):
+        variant_type_option = VariantTypeOption.objects.filter(pk=kwargs.get('variant_type_option_id')).first()
+        variant_type_option_serializer = VariantTypeOptionSerializer(variant_type_option)
+        context = {
+            'message': 'Single Variant Type Option',
+            'data': variant_type_option_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        variant_type_option = VariantTypeOption.objects.filter(pk=kwargs.get('variant_type_option_id')).first()
+        variant_type_option.delete()
+        context = {
+            'message': 'Variant type option deleted successfully'
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        VariantTypeOption.objects.filter(pk=kwargs.get('variant_type_option_id')).update(
+            name=data.get('variant_type_option_name'),
+            variant_type=VariantType.objects.filter(name=data.get('variant_type')).first(),
+            updated_by=CustomUser.objects.filter(username=data.get('variant_type_option_updated_by')).first()
+        )
+        context = {
+            'message': 'Variant type option updated successfully'
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class ProductVariantView(APIView):
+    def get(self, request, *args, **kwargs):
+        product_variant = ProductVariant.objects.filter(pk=kwargs.get('product_variant_id')).first()
+        product_variant_serializer = ProductVariantSerializer(product_variant)
+        context = {
+            'message': 'Single Product Variant',
+            'data': product_variant_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        product_variant = ProductVariant.objects.filter(pk=kwargs.get('product_variant_id')).first()
+        product_variant.delete()
+        context = {
+            'message': 'Product Variant Deleted Successfully',
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        ProductVariant.objects.filter(pk=kwargs.get('product_variant_id')).update(
+            name=data.get('product_variant_name'),
+            purchase_price=data.get('product_variant_purchase_price'),
+            selling_price=data.get('product_variant_selling_price'),
+            quantity=data.get('product_variant_quantity'),
+            product=Product.objects.filter(item_name=data.get('product_variant_product')).first(),
+            variant_type=VariantType.objects.filter(name=data.get('product_variant_variant_type')).first(),
+            variant_type_option=VariantTypeOption.objects.filter(
+                name=data.get('product_variant_variant_type_option').first()),
+            updated_by=CustomUser.objects.filter(username=data.get('product_variant_updated_by')).first(),
+        )
+        context = {
+            'message': 'Product Variant Updated successfully'
         }
 
         return Response(context, status=status.HTTP_200_OK)

@@ -112,7 +112,7 @@ class VariantTypeSerializer(serializers.ModelSerializer):
 
 class VariantTypeOptionSerializer(serializers.ModelSerializer):
     variant_type = VariantTypeSerializer(read_only=True)
-    created_by = CustomUserSerializer(read_only=True, many=True)
+    created_by = CustomUserSerializer(read_only=True)
 
     class Meta:
         model = VariantTypeOption

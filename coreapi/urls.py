@@ -15,6 +15,9 @@ urlpatterns = [
     path('product/', views.GetProduct.as_view(), name='product'),
     path('e-commerce/', views.GetOnlineSore.as_view(), name='e_commerce'),
     path('e-commerce_product/', views.GetOnlineStoreHasProduct.as_view(), name='e_commerce_product'),
+    path('variant_type/', views.GetVariantType.as_view(), name='variant_type'),
+    path('variant_type_option/', views.GetVariantTypeOption.as_view(), name='variant_type_option'),
+    path('product_variant/', views.GetProductVariant.as_view(), name='product_variant'),
     path('category/<int:cat_id>/', views.CategoryView.as_view(), name='category_view'),
     path('subcategory/<int:sub_cat_id>/', views.SubCategoryView.as_view(), name='subcategory_view'),
     path('brand/<int:brand_id>/', views.BrandView.as_view(), name='brand_view'),
@@ -26,4 +29,7 @@ urlpatterns = [
     path('sell_record/<int:sell_record_id>/', views.SellRecordView.as_view(), name='sell_record_view'),
     path('e-commerce/<int:e_commerce_id>/', views.OnlineStoreView.as_view(), name='e_commerce_view'),
     path('e-commerce_product/<int:e_commerce_has_product_id>/', views.OnlineStoreHasProductView.as_view(), name='e_commerce_product_view'),
+    path('variant_type/<int:variant_type_id>/', views.VariantTypeView.as_view(), name='variant_type_view'),
+    path('variant_type_option/<int:variant_type_option_id>/', views.VariantTypeOptionView.as_view(), name='variant_type_option_view'),
+    path('product_variant/<int:product_variant>/', views.ProductVariantView.as_view(), name='product_variant_view'),
 ]
