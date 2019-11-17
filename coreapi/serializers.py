@@ -85,11 +85,15 @@ class CompanySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    brand = BrandSerializer(read_only=True)
+    category = CategorySerializer(read_only=True)
+    sub_category = SubCategorySerializer(read_only=True)
+    created_by = CustomUserSerializer(read_only=True)
+
     class Meta:
         model = Product
         fields = ['id', 'item_key', 'item_name', 'stock_alert', 'unit', 'vat', 'description', 'track',
-                  'brand', 'category', 'sub_category', 'created_by', 'warehouse'
-                  ]
+                  'brand', 'category', 'sub_category', 'created_by', 'warehouse']
 
 
 class WarehouseSerializer(serializers.ModelSerializer):
@@ -108,7 +112,7 @@ class VariantTypeSerializer(serializers.ModelSerializer):
 
 class VariantTypeOptionSerializer(serializers.ModelSerializer):
     variant_type = VariantTypeSerializer(read_only=True)
-    created_by = CustomUserSerializer(read_only=True, many=True)
+    created_by = CustomUserSerializer(read_only=True)
 
     class Meta:
         model = VariantTypeOption
@@ -149,10 +153,11 @@ class EcommerceSiteSerializer(serializers.ModelSerializer):
 class EcommerceHasProductSerializer(serializers.ModelSerializer):
     ecommerce = EcommerceSiteSerializer(read_only=True)
     created_by = CustomUserSerializer(read_only=True)
+    product = ProductSerializer(read_only=True)
 
     class Meta:
         model = EcommerceHasProduct
-        fields = ['id', 'price', 'quantity', 'ecommerce', 'created_by']
+        fields = ['id', 'price', 'quantity', 'product', 'ecommerce', 'created_by']
 
 
 class SellRecordSerializer(serializers.ModelSerializer):
