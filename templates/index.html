@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+{% load socialaccount %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Business BD</title>
+</head>
+<body>
+
+{% if user.is_authenticated %}
+    <p>Welcome, {{ user }}</p>
+{% else %}
+    <a href="{% provider_login_url 'facebook' %}">Sign Up</a>
+{% endif %}
+
+</body>
+</html>

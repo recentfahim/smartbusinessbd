@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'rest_auth.registration',
     'coreapi',
     'allauth',
+    'sslserver',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
@@ -139,8 +140,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'assets'),
+]
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 LOGGING = {
     'version': 1,
@@ -162,3 +167,4 @@ LOGGING = {
 }
 
 REST_USE_JWT = True
+LOGIN_REDIRECT_URL = '/'
