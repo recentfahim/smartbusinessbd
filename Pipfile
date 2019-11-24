@@ -12,6 +12,7 @@ djangorestframework = "*"
 python-decouple = "*"
 django-mysql = "*"
 mysqlclient = "*"
+django-cors-headers = "*"
 
 [requires]
 python_version = "3.6"
