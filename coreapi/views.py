@@ -1027,3 +1027,15 @@ class ProductVariantView(APIView):
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
+    # def get(self, request, *args, **kwargs):
+    #     print(request.META)
+    #
+    # def post(self, request, *args, **kwargs):
+    #     print(request.data)
+    #     print('fahim')
+    #     return Response({'name': 'Fahim'})
+
+
+class GoogleLogin(APIView):
+    def get(self, request, *args, **kwargs):
+        print(request.data)

@@ -10,4 +10,5 @@ urlpatterns = [
     path('api/core/v1/rest-auth/registration/', include('rest_auth.registration.urls')),
     path('api/core/v1/rest-auth/facebook/', views.FacebookLogin.as_view(), name='fb_login'),
     path('', views.Index.as_view(), name='home'),
+    path('api/core/v1/auth/google/', views.GoogleLogin.as_view(), name='google_login'),
 ]

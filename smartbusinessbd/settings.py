@@ -128,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
@@ -184,7 +184,7 @@ REST_USE_JWT = True
 LOGIN_REDIRECT_URL = '/'
 
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
+    'https://localhost:3000',
 )
 
 CORS_ALLOW_CREDENTIALS = True
