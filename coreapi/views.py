@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.views.generic import TemplateView
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from coreapi.components.googleviews import GoogleOAuth2AdapterIdToken
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_auth.registration.views import SocialLoginView
 from .models import Brand, Category, City, ContactCompany, ContactPerson, Country, CustomUser, SubCategory, Product, \
     Warehouse, Product, Partnership, Company, VariantType, ProductVariant, VariantTypeOption, SellRecord, \
@@ -1027,15 +1030,8 @@ class ProductVariantView(APIView):
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
-    # def get(self, request, *args, **kwargs):
-    #     print(request.META)
-    #
-    # def post(self, request, *args, **kwargs):
-    #     print(request.data)
-    #     print('fahim')
-    #     return Response({'name': 'Fahim'})
 
 
-class GoogleLogin(APIView):
-    def get(self, request, *args, **kwargs):
-        print(request.data)
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2AdapterIdToken
+    client_class = OAuth2Client
