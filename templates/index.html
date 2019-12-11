@@ -10,7 +10,7 @@
 {% if user.is_authenticated %}
     <p>Welcome, {{ user }}</p>
 {% else %}
-    <a href="{% provider_login_url 'facebook' %}">Sign Up</a>
+    <a href="{% url 'fb_login' %}">Sign Up</a>
 {% endif %}
 
 </body>
