@@ -12,7 +12,7 @@ from .models import Brand, Category, City, ContactCompany, ContactPerson, Countr
     Warehouse, Product, Partnership, Company, VariantType, ProductVariant, VariantTypeOption, SellRecord, \
     EcommerceSite, EcommerceHasProduct
 from .serializers import BrandSerializer, CategorySerializer, CitySerializer, ContactCompanySerializer, \
-    ContactPersonSerializer, CountrySerializer, CustomUserSerializer, ProductSerializer, WarehouseSerializer, \
+    ContactPersonSerializer, CountrySerializer, UserSerializer, ProductSerializer, WarehouseSerializer, \
     SubCategorySerializer, CompanySerializer, PartnershipSerializer, SellRecordSerializer, EcommerceSiteSerializer, \
     EcommerceHasProductSerializer, VariantTypeSerializer, VariantTypeOptionSerializer, ProductVariantSerializer
 

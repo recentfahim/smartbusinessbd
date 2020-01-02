@@ -3,7 +3,16 @@ from django.contrib.auth.models import AbstractUser
 
 
 class CustomUser(AbstractUser):
-    role = models.SmallIntegerField(blank=True, null=True)
+    SUPER_ADMIN = 'sp'
+    ADMIN = 'ad'
+    USER = 'us'
+
+    USER_TYPE_CHOICES = (
+        (SUPER_ADMIN, 'Super Admin'),
+        (ADMIN, 'Admin'),
+        (USER, 'User')
+    )
+    role = models.CharField(max_length=2, choices=USER_TYPE_CHOICES, default=USER)
     phone = models.CharField(max_length=15, blank=True, null=True)
     avatar = models.CharField(null=True, max_length=55, blank=True)
 
