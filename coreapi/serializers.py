@@ -4,15 +4,21 @@ from .models import Brand, Category, City, ContactCompany, ContactPerson, Countr
     EcommerceHasProduct, EcommerceSite
 
 
-class CustomUserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'role', 'phone', 'avatar']
 
 
+class CustomUserDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'role', 'phone', 'avatar']
+
+
 class BrandSerializer(serializers.ModelSerializer):
-    created_by = CustomUserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
 
     class Meta:
         model = Brand
@@ -36,7 +42,7 @@ class CountrySerializer(serializers.ModelSerializer):
 class ContactCompanySerializer(serializers.ModelSerializer):
     country = CountrySerializer(read_only=True)
     city = CitySerializer(read_only=True)
-    created_by = CustomUserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
 
     class Meta:
         model = ContactCompany
@@ -47,7 +53,7 @@ class ContactCompanySerializer(serializers.ModelSerializer):
 
 
 class ContactPersonSerializer(serializers.ModelSerializer):
-    created_by = CustomUserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
     company = ContactCompanySerializer(read_only=True)
 
     class Meta:
@@ -56,7 +62,7 @@ class ContactPersonSerializer(serializers.ModelSerializer):
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
-    created_by = CustomUserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
 
     class Meta:
         model = SubCategory
@@ -65,7 +71,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     category_sub_category = SubCategorySerializer(read_only=True, many=True)
-    created_by = CustomUserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
 
     class Meta:
         model = Category
@@ -74,7 +80,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class CompanySerializer(serializers.ModelSerializer):
-    created_by = CustomUserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
     city = CitySerializer(read_only=True)
     country = CountrySerializer(read_only=True)
 
@@ -88,7 +94,7 @@ class ProductSerializer(serializers.ModelSerializer):
     brand = BrandSerializer(read_only=True)
     category = CategorySerializer(read_only=True)
     sub_category = SubCategorySerializer(read_only=True)
-    created_by = CustomUserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
 
     class Meta:
         model = Product
@@ -103,7 +109,7 @@ class WarehouseSerializer(serializers.ModelSerializer):
 
 
 class VariantTypeSerializer(serializers.ModelSerializer):
-    created_by = CustomUserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
 
     class Meta:
         model = VariantType
@@ -112,7 +118,7 @@ class VariantTypeSerializer(serializers.ModelSerializer):
 
 class VariantTypeOptionSerializer(serializers.ModelSerializer):
     variant_type = VariantTypeSerializer(read_only=True)
-    created_by = CustomUserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
 
     class Meta:
         model = VariantTypeOption
@@ -123,7 +129,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
     variant_type = VariantTypeSerializer(read_only=True, many=True)
     variant_type_option = VariantTypeOptionSerializer(read_only=True, many=True)
-    created_by = CustomUserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
 
     class Meta:
         model = ProductVariant
@@ -134,8 +140,8 @@ class ProductVariantSerializer(serializers.ModelSerializer):
 class PartnershipSerializer(serializers.ModelSerializer):
     company = CompanySerializer(read_only=True)
     product = ProductSerializer(read_only=True)
-    created_by = CustomUserSerializer(read_only=True)
-    partner = CustomUserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
+    partner = UserSerializer(read_only=True)
 
     class Meta:
         model = Partnership
@@ -143,7 +149,7 @@ class PartnershipSerializer(serializers.ModelSerializer):
 
 
 class EcommerceSiteSerializer(serializers.ModelSerializer):
-    created_by = CustomUserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
 
     class Meta:
         model = EcommerceSite
@@ -152,7 +158,7 @@ class EcommerceSiteSerializer(serializers.ModelSerializer):
 
 class EcommerceHasProductSerializer(serializers.ModelSerializer):
     ecommerce = EcommerceSiteSerializer(read_only=True)
-    created_by = CustomUserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
     product = ProductSerializer(read_only=True)
 
     class Meta:
@@ -162,7 +168,7 @@ class EcommerceHasProductSerializer(serializers.ModelSerializer):
 
 class SellRecordSerializer(serializers.ModelSerializer):
     ecommerce_has_product = EcommerceHasProductSerializer(read_only=True)
-    created_by = CustomUserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
 
     class Meta:
         model = SellRecord
