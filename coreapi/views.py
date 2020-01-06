@@ -15,6 +15,7 @@ from .serializers import BrandSerializer, CategorySerializer, CitySerializer, Co
     ContactPersonSerializer, CountrySerializer, UserSerializer, ProductSerializer, WarehouseSerializer, \
     SubCategorySerializer, CompanySerializer, PartnershipSerializer, SellRecordSerializer, EcommerceSiteSerializer, \
     EcommerceHasProductSerializer, VariantTypeSerializer, VariantTypeOptionSerializer, ProductVariantSerializer
+from rest_framework.permissions import IsAuthenticated
 
 
 class Index(TemplateView):
@@ -22,6 +23,8 @@ class Index(TemplateView):
 
 
 class GetCategory(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         categories = Category.objects.all()
         
