@@ -55,6 +55,7 @@ class GetCategory(APIView):
 class GetSubCategory(APIView):
     def get(self, request, *args, **kwargs):
         sub_categories = SubCategory.objects.all()
+        
 
         sub_category_serializer = SubCategorySerializer(sub_categories, many=True)
 
