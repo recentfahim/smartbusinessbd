@@ -185,7 +185,7 @@ REST_USE_JWT = True
 LOGIN_REDIRECT_URL = '/'
 
 CORS_ORIGIN_WHITELIST = (
-    'https://localhost:3000',
+    'https://localhost:3000','http://localhost:3000',
 )
 
 CORS_ALLOW_CREDENTIALS = True
