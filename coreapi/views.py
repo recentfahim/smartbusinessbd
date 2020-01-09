@@ -16,10 +16,20 @@ from .serializers import BrandSerializer, CategorySerializer, CitySerializer, Co
     SubCategorySerializer, CompanySerializer, PartnershipSerializer, SellRecordSerializer, EcommerceSiteSerializer, \
     EcommerceHasProductSerializer, VariantTypeSerializer, VariantTypeOptionSerializer, ProductVariantSerializer
 from rest_framework.permissions import IsAuthenticated
+import jwt
+from django.conf import settings
 
 
 class Index(TemplateView):
     template_name = 'test/index.html'
+
+
+def decode_token(header):
+    access_token = header.get('HTTP_AUTHORIZATION')[4:]
+    print(access_token)
+    decoded_access_token = jwt.decode(access_token, settings.SECRET_KEY)
+    print(decoded_access_token)
+    return decoded_access_token
 
 
 class GetCategory(APIView):
@@ -27,7 +37,6 @@ class GetCategory(APIView):
 
     def get(self, request, *args, **kwargs):
         categories = Category.objects.all()
-        
         category_serializer = CategorySerializer(categories, many=True)
 
         context = {
@@ -53,10 +62,10 @@ class GetCategory(APIView):
 
 
 class GetSubCategory(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         sub_categories = SubCategory.objects.all()
-        
-
         sub_category_serializer = SubCategorySerializer(sub_categories, many=True)
 
         context = {
@@ -82,6 +91,8 @@ class GetSubCategory(APIView):
 
 
 class GetCountry(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         countries = Country.objects.all()
         country_serializer = CountrySerializer(countries, many=True)
@@ -107,6 +118,8 @@ class GetCountry(APIView):
 
 
 class GetCity(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         cities = City.objects.all()
         city_serializer = CountrySerializer(cities, many=True)
@@ -133,6 +146,8 @@ class GetCity(APIView):
 
 
 class GetBrand(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         brands = Brand.objects.all()
         brand_serializer = BrandSerializer(brands, many=True)
@@ -161,6 +176,8 @@ class GetBrand(APIView):
 
 
 class GetContactCompany(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         companies = ContactCompany.objects.all()
 
@@ -206,6 +223,8 @@ class GetContactCompany(APIView):
 
 
 class GetContactPerson(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         contact_persons = ContactPerson.objects.all()
 
@@ -240,6 +259,8 @@ class GetContactPerson(APIView):
 
 
 class GetCompany(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         companies = Company.objects.all()
         company_serializer = CompanySerializer(companies, many=True)
@@ -278,9 +299,12 @@ class GetCompany(APIView):
 
 
 class GetPartnership(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         partnership = Partnership.objects.all()
         partnership_serializer = PartnershipSerializer(partnership, many=True)
+
         context = {
             'message': 'All Partnerships',
             'data': partnership_serializer.data
@@ -307,6 +331,8 @@ class GetPartnership(APIView):
 
 
 class GetProduct(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         products = Product.objects.all()
         product_serializer = ProductSerializer(products, many=True)
@@ -343,6 +369,8 @@ class GetProduct(APIView):
 
 
 class GetSellRecord(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         sell_records = SellRecord.objects.all()
         sell_record_serializer = SellRecordSerializer(sell_records, many=True)
@@ -369,6 +397,8 @@ class GetSellRecord(APIView):
 
 
 class GetOnlineSore(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         online_stores = EcommerceSite.objects.all()
         online_stores_serializer = EcommerceSiteSerializer(online_stores, many=True)
@@ -397,6 +427,8 @@ class GetOnlineSore(APIView):
 
 
 class GetOnlineStoreHasProduct(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         store_product = EcommerceHasProduct.objects.all()
         store_product_serializer = EcommerceHasProductSerializer(store_product, many=True)
@@ -425,6 +457,8 @@ class GetOnlineStoreHasProduct(APIView):
 
 
 class GetVariantType(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         variant_type = VariantType.objects.all()
         variant_type_serializer = VariantTypeSerializer(variant_type, many=True)
@@ -451,6 +485,8 @@ class GetVariantType(APIView):
 
 
 class GetVariantTypeOption(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         variant_type_option = VariantTypeOption.objects.all()
         variant_type_option_serializer = VariantTypeOptionSerializer(variant_type_option, many=True)
@@ -478,6 +514,8 @@ class GetVariantTypeOption(APIView):
 
 
 class GetProductVariant(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         product_variant = ProductVariant.objects.all()
         product_variant_serializer = ProductVariantSerializer(product_variant, many=True)
@@ -510,6 +548,8 @@ class GetProductVariant(APIView):
 
 
 class CategoryView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, reauest, *args, **kwargs):
         category = Category.objects.get(pk=self.kwargs.get('cat_id'))
         category_serializer = CategorySerializer(category)
@@ -545,6 +585,8 @@ class CategoryView(APIView):
 
 
 class SubCategoryView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, reauest, *args, **kwargs):
         sub_category = SubCategory.objects.get(pk=kwargs.get('sub_cat_id'))
         sub_category_serializer = SubCategorySerializer(sub_category)
@@ -579,6 +621,8 @@ class SubCategoryView(APIView):
 
 
 class BrandView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, reauest, *args, **kwargs):
         brand = Brand.objects.get(pk=kwargs.get('brand_id'))
         brand_serializer = BrandSerializer(brand)
@@ -615,6 +659,8 @@ class BrandView(APIView):
 
 
 class ContactCompanyView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         contact_company = ContactCompany.objects.get(pk=kwargs.get('contact_company_id'))
         contact_company_serializer = ContactCompanySerializer(contact_company)
@@ -665,6 +711,8 @@ class ContactCompanyView(APIView):
 
 
 class ContactPersonView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         contact_person = ContactPerson.objects.filter(pk=kwargs.get('contact_person_id')).first()
         contact_person_serializer = ContactPersonSerializer(contact_person)
@@ -707,6 +755,8 @@ class ContactPersonView(APIView):
 
 
 class CompanyView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         company = Company.objects.filter(pk=kwargs.get('company_id'))
         company_serializer = CompanySerializer(company)
@@ -750,6 +800,8 @@ class CompanyView(APIView):
 
 
 class PartnershipView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         partner = Partnership.objects.filter(pk=kwargs.get('partnership_id')).first()
         partner_serializer = PartnershipSerializer(partner)
@@ -783,6 +835,8 @@ class PartnershipView(APIView):
 
 
 class ProductView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         product = Product.objects.filter(pk=kwargs.get('product_id')).first()
         product_serializer = ProductSerializer(product)
@@ -825,6 +879,8 @@ class ProductView(APIView):
 
 
 class SellRecordView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         sell_record = SellRecord.objects.filter(pk=kwargs.get('sell_record_id'))
         sell_record_serializer = ProductSerializer(sell_record)
@@ -857,6 +913,8 @@ class SellRecordView(APIView):
 
 
 class OnlineStoreView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         online_store = EcommerceSite.objects.filter(pk=kwargs.get('e_commerce_id')).first()
         online_store_serializer = EcommerceSiteSerializer(online_store)
@@ -892,6 +950,8 @@ class OnlineStoreView(APIView):
 
 
 class OnlineStoreHasProductView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         store_has_product = EcommerceSite.objects.filter(pk=kwargs.get('e_commerce_has_product_id')).first()
         store_has_product_serializer = EcommerceHasProductSerializer(store_has_product)
@@ -928,6 +988,8 @@ class OnlineStoreHasProductView(APIView):
 
 
 class VariantTypeView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         variant_type = VariantType.objects.filter(pk=kwargs.get('variant_type_id')).first()
         variant_type_serializer = VariantTypeSerializer(variant_type)
@@ -960,6 +1022,8 @@ class VariantTypeView(APIView):
 
 
 class VariantTypeOptionView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         variant_type_option = VariantTypeOption.objects.filter(pk=kwargs.get('variant_type_option_id')).first()
         variant_type_option_serializer = VariantTypeOptionSerializer(variant_type_option)
@@ -993,6 +1057,8 @@ class VariantTypeOptionView(APIView):
 
 
 class ProductVariantView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         product_variant = ProductVariant.objects.filter(pk=kwargs.get('product_variant_id')).first()
         product_variant_serializer = ProductVariantSerializer(product_variant)
