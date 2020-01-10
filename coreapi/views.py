@@ -18,6 +18,7 @@ from .serializers import BrandSerializer, CategorySerializer, CitySerializer, Co
 from rest_framework.permissions import IsAuthenticated
 import jwt
 from django.conf import settings
+from rest_framework.authtoken.models import Token
 
 
 class Index(TemplateView):
@@ -26,17 +27,18 @@ class Index(TemplateView):
 
 def decode_token(header):
     access_token = header.get('HTTP_AUTHORIZATION')[4:]
-    print(access_token)
     decoded_access_token = jwt.decode(access_token, settings.SECRET_KEY)
-    print(decoded_access_token)
-    return decoded_access_token
+    user = CustomUser.objects.get(pk=decoded_access_token.get('user_id'))
+
+    return user
 
 
 class GetCategory(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        categories = Category.objects.all()
+        user = decode_token(request.META)
+        categories = user.category_created_by.all()
         category_serializer = CategorySerializer(categories, many=True)
 
         context = {
@@ -46,12 +48,12 @@ class GetCategory(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         data = request.data
-        print(data)
         category = Category.objects.create(
             name=data.get('name'),
             description=data.get('description'),
-            created_by=CustomUser.objects.get(pk=1)
+            created_by=user_into,
         )
         category_serializer = CategorySerializer(category)
         context = {
@@ -65,7 +67,8 @@ class GetSubCategory(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        sub_categories = SubCategory.objects.all()
+        user_into = decode_token(request.META)
+        sub_categories = user_into.sub_category_created_by.all()
         sub_category_serializer = SubCategorySerializer(sub_categories, many=True)
 
         context = {
@@ -75,11 +78,12 @@ class GetSubCategory(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         data = request.data
         sub_category = SubCategory.objects.create(
             name=data.get('name'),
             description=data.get('description'),
-            created_by=CustomUser.objects.get(pk=1),
+            created_by=user_into,
             category=Category.objects.get(name=data.get('category'))
         )
         sub_category_serializer = SubCategorySerializer(sub_category)
@@ -149,7 +153,8 @@ class GetBrand(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        brands = Brand.objects.all()
+        user_into = decode_token(request.META)
+        brands = user_into.brand_created_by.all()
         brand_serializer = BrandSerializer(brands, many=True)
 
         context = {
@@ -159,11 +164,12 @@ class GetBrand(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         data = request.data
 
         brand = Brand.objects.create(
             name=data.get('brand_name'),
-            created_by=CustomUser.objects.get(username=data.get('brand_created_by')),
+            created_by=user_into,
             logo=data.get('brand_logo'),
             url=data.get('brand_url')
         )
@@ -179,7 +185,8 @@ class GetContactCompany(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        companies = ContactCompany.objects.all()
+        user_into = decode_token(request.META)
+        companies = user_into.contact_company_created_by.all()
 
         company_serializer = ContactCompanySerializer(companies, many=True)
 
@@ -191,6 +198,7 @@ class GetContactCompany(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         data = request.data
 
         contact_company = ContactCompany.objects.create(
@@ -210,7 +218,7 @@ class GetContactCompany(APIView):
             website=data.get('website'),
             supplier=data.get('supplier'),
             customer=data.get('customer'),
-            created_by=CustomUser.objects.get(pk=1)
+            created_by=user_into,
         )
         contact_company_serializer = ContactCompanySerializer(contact_company)
 
@@ -225,8 +233,9 @@ class GetContactCompany(APIView):
 class GetContactPerson(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        contact_persons = ContactPerson.objects.all()
+    def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
+        contact_persons = user_into.contact_person_created_by.all()
 
         contact_persons_serializer = ContactPersonSerializer(contact_persons, many=True)
 
@@ -236,7 +245,8 @@ class GetContactPerson(APIView):
         }
         return Response(context, status=status.HTTP_200_OK)
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         data = request.data
 
         contact_person = ContactPerson.objects.create(
@@ -246,7 +256,7 @@ class GetContactPerson(APIView):
             supplier=data.get('is_supplier'),
             customer=data.get('is_customer'),
             company=ContactCompany.objects.filter(company_name=(data.get('company'))).first(),
-            created_by=CustomUser.objects.filter(username=data.get('created_by')).first()
+            created_by=user_into,
         )
 
         contact_person_serializer = ContactPersonSerializer(contact_person)
@@ -262,7 +272,8 @@ class GetCompany(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        companies = Company.objects.all()
+        user_into = decode_token(request.META)
+        companies = user_into.company_created_by.all()
         company_serializer = CompanySerializer(companies, many=True)
 
         context = {
@@ -272,6 +283,7 @@ class GetCompany(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         data = request.data
         print(data)
         company = Company.objects.create(
@@ -287,7 +299,7 @@ class GetCompany(APIView):
             fax=data.get('company_fax'),
             image=data.get('company_image'),
             logo=data.get('company_logo'),
-            created_by=CustomUser.objects.get(username=data.get('company_created_by')),
+            created_by=user_into,
         )
         company_serializer = CompanySerializer(company)
         context = {
@@ -302,6 +314,7 @@ class GetPartnership(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         partnership = Partnership.objects.all()
         partnership_serializer = PartnershipSerializer(partnership, many=True)
 
@@ -313,6 +326,7 @@ class GetPartnership(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         data = request.data
 
         partner = Partnership.objects.create(
@@ -334,7 +348,8 @@ class GetProduct(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        products = Product.objects.all()
+        user_into = decode_token(request.META)
+        products = user_into.product_created_by.all()
         product_serializer = ProductSerializer(products, many=True)
         context = {
             'message': 'All Products',
@@ -344,6 +359,7 @@ class GetProduct(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         data = request.data
         product = Product.objects.create(
             item_key=data.get('product_key'),
@@ -358,7 +374,7 @@ class GetProduct(APIView):
             sub_category=SubCategory.objects.filter(name=data.get('product_sub_category')).first(),
             warehouse=Warehouse.objects.filter(name=data.get('product_warehouse')).first(),
             company=Company.objects.filter(name=data.get('product_company')).first(),
-            created_by=CustomUser.objects.filter(username=data.get('product_created_by')).first(),
+            created_by=user_into,
         )
         product_serializer = ProductSerializer(product)
         context = {
@@ -372,6 +388,7 @@ class GetSellRecord(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         sell_records = SellRecord.objects.all()
         sell_record_serializer = SellRecordSerializer(sell_records, many=True)
         context = {
@@ -381,12 +398,13 @@ class GetSellRecord(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         data = request.data
         sell_record = SellRecord.objects.create(
             price=data.get('sell_record_price'),
             quantity=data.get('sell_record_quantity'),
             ecommerce_has_product=EcommerceHasProduct.objects.filter(pk=data.get('sell_record_store_has_product')).first(),
-            created_by=CustomUser.objects.filter(username=data.get('sell_record_created_by')).first()
+            created_by=user_into
         )
         sell_record_serializer = SellRecordSerializer(sell_record)
         context = {
@@ -400,6 +418,7 @@ class GetOnlineSore(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         online_stores = EcommerceSite.objects.all()
         online_stores_serializer = EcommerceSiteSerializer(online_stores, many=True)
         context = {
@@ -410,6 +429,7 @@ class GetOnlineSore(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         data = request.data
         online_store = EcommerceSite.objects.create(
             name=data.get('online_store_name'),
@@ -430,6 +450,7 @@ class GetOnlineStoreHasProduct(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         store_product = EcommerceHasProduct.objects.all()
         store_product_serializer = EcommerceHasProductSerializer(store_product, many=True)
         context = {
@@ -440,6 +461,7 @@ class GetOnlineStoreHasProduct(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         data = request.data
         store_product = EcommerceHasProduct.objects.create(
             price=data.get('store_product_price'),
@@ -460,6 +482,7 @@ class GetVariantType(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         variant_type = VariantType.objects.all()
         variant_type_serializer = VariantTypeSerializer(variant_type, many=True)
         context = {
@@ -470,6 +493,7 @@ class GetVariantType(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         data = request.data
         variant_type = VariantType.objects.create(
             name=data.get('variant_type_name'),
@@ -488,6 +512,7 @@ class GetVariantTypeOption(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         variant_type_option = VariantTypeOption.objects.all()
         variant_type_option_serializer = VariantTypeOptionSerializer(variant_type_option, many=True)
         context = {
@@ -498,6 +523,7 @@ class GetVariantTypeOption(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         data = request.data
         variant_type_option = VariantTypeOption.objects.create(
             name=data.get('variant_type_option_name'),
@@ -517,6 +543,7 @@ class GetProductVariant(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         product_variant = ProductVariant.objects.all()
         product_variant_serializer = ProductVariantSerializer(product_variant, many=True)
         context = {
@@ -527,6 +554,7 @@ class GetProductVariant(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         data = request.data
         product_variant = ProductVariant.objects.create(
             name=data.get('product_variant_name'),
@@ -662,6 +690,7 @@ class ContactCompanyView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         contact_company = ContactCompany.objects.get(pk=kwargs.get('contact_company_id'))
         contact_company_serializer = ContactCompanySerializer(contact_company)
         context = {
@@ -714,6 +743,7 @@ class ContactPersonView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         contact_person = ContactPerson.objects.filter(pk=kwargs.get('contact_person_id')).first()
         contact_person_serializer = ContactPersonSerializer(contact_person)
 
@@ -758,6 +788,7 @@ class CompanyView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         company = Company.objects.filter(pk=kwargs.get('company_id'))
         company_serializer = CompanySerializer(company)
         context = {
@@ -803,6 +834,7 @@ class PartnershipView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         partner = Partnership.objects.filter(pk=kwargs.get('partnership_id')).first()
         partner_serializer = PartnershipSerializer(partner)
         context = {
@@ -838,6 +870,7 @@ class ProductView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         product = Product.objects.filter(pk=kwargs.get('product_id')).first()
         product_serializer = ProductSerializer(product)
         context = {
@@ -882,6 +915,7 @@ class SellRecordView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         sell_record = SellRecord.objects.filter(pk=kwargs.get('sell_record_id'))
         sell_record_serializer = ProductSerializer(sell_record)
         context = {
@@ -916,6 +950,7 @@ class OnlineStoreView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         online_store = EcommerceSite.objects.filter(pk=kwargs.get('e_commerce_id')).first()
         online_store_serializer = EcommerceSiteSerializer(online_store)
         context = {
@@ -953,6 +988,7 @@ class OnlineStoreHasProductView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         store_has_product = EcommerceSite.objects.filter(pk=kwargs.get('e_commerce_has_product_id')).first()
         store_has_product_serializer = EcommerceHasProductSerializer(store_has_product)
         context = {
@@ -991,6 +1027,7 @@ class VariantTypeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         variant_type = VariantType.objects.filter(pk=kwargs.get('variant_type_id')).first()
         variant_type_serializer = VariantTypeSerializer(variant_type)
         context = {
@@ -1025,6 +1062,7 @@ class VariantTypeOptionView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         variant_type_option = VariantTypeOption.objects.filter(pk=kwargs.get('variant_type_option_id')).first()
         variant_type_option_serializer = VariantTypeOptionSerializer(variant_type_option)
         context = {
@@ -1060,6 +1098,7 @@ class ProductVariantView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
         product_variant = ProductVariant.objects.filter(pk=kwargs.get('product_variant_id')).first()
         product_variant_serializer = ProductVariantSerializer(product_variant)
         context = {
