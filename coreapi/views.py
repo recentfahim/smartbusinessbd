@@ -67,6 +67,7 @@ class GetSubCategory(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        print(request.META)
         user_into = decode_token(request.META)
         sub_categories = user_into.sub_category_created_by.all()
         sub_category_serializer = SubCategorySerializer(sub_categories, many=True)
@@ -84,7 +85,7 @@ class GetSubCategory(APIView):
             name=data.get('name'),
             description=data.get('description'),
             created_by=user_into,
-            category=Category.objects.get(name=data.get('category'))
+            category=Category.objects.get(pk=data.get('category'))
         )
         sub_category_serializer = SubCategorySerializer(sub_category)
         context = {
