@@ -108,3 +108,4 @@ venv.bak/
 .vscode/
 mysqlclient-1.4.6-cp38-cp38-win_amd64.whl
 smartbusinessbd/__init__.py
+smartbusinessbd/__init__.py
