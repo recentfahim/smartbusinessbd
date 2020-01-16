@@ -53,6 +53,7 @@ class GetCategory(APIView):
         category = Category.objects.create(
             name=data.get('name'),
             description=data.get('description'),
+            is_public=data.get('is_public'),
             created_by=user_into,
         )
         category_serializer = CategorySerializer(category)
