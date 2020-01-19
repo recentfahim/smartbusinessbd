@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from coreapi import views
+from django.conf import settings
+from django.contrib.staticfiles.urls import static, staticfiles_urlpatterns
 
 from rest_framework_jwt.settings import api_settings
 
@@ -31,3 +33,7 @@ urlpatterns = [
     path('', views.Index.as_view(), name='home'),
     path('api/core/v1/rest-auth/google/', views.GoogleLogin.as_view(), name='google_login'),
 ]
+
+urlpatterns += staticfiles_urlpatterns()
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -19,6 +19,9 @@ from rest_framework.permissions import IsAuthenticated
 import jwt
 from django.conf import settings
 from rest_framework.authtoken.models import Token
+import string
+import random
+import os
 
 
 class Index(TemplateView):
@@ -1146,3 +1149,33 @@ class FacebookLogin(SocialLoginView):
 class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2AdapterIdToken
     client_class = OAuth2Client
+
+
+class ImageUpload(APIView):
+    def handle_uploaded_file(self, file):
+        file_name = file.name
+        char = string.ascii_letters
+        cover_string = ''.join(random.choice(char) for x in range(12))
+        path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        folder = os.path.join(path, 'media', 'images')
+
+        if not os.path.exists(path):
+            os.makedirs(folder, exist_ok=True)
+
+        new_file_name = cover_string + '.' + file_name.split('.')[-1]
+        event_photo = os.path.join(folder, new_file_name)
+
+        with open(event_photo, 'wb+') as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
+        return new_file_name
+
+    def post(self, request, *args, **kwargs):
+        req = request.data
+        image_path = self.handle_uploaded_file(req.get('file'))
+        context = {
+            'message': 'Image uploaded successfully',
+            'path': image_path,
+        }
+
+        return Response({'data': context}, status=status.HTTP_200_OK)
