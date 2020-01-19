@@ -170,7 +170,7 @@ class GetBrand(APIView):
         data = request.data
 
         brand = Brand.objects.create(
-            name=data.get('brand_name'),
+            name=data.get('name'),
             created_by=user_into,
             logo=data.get('brand_logo'),
             url=data.get('brand_url')
