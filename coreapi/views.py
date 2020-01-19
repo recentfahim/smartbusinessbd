@@ -173,7 +173,7 @@ class GetBrand(APIView):
         data = request.data
 
         brand = Brand.objects.create(
-            name=data.get('brand_name'),
+            name=data.get('name'),
             created_by=user_into,
             logo=data.get('brand_logo'),
             url=data.get('brand_url')
@@ -642,7 +642,7 @@ class SubCategoryView(APIView):
         sub_category = SubCategory.objects.filter(pk=kwargs.get('sub_cat_id')).update(
             name=data.get('name'),
             description=data.get('description'),
-            category=Category.objects.get(name=data.get('category'))
+            category=Category.objects.get(pk=data.get('category'))
         )
         sub_category = SubCategory.objects.filter(pk=kwargs.get('sub_cat_id'))
         sub_category_serializer = SubCategorySerializer(sub_category)
