@@ -1152,10 +1152,12 @@ class GoogleLogin(SocialLoginView):
 
 
 class ImageUpload(APIView):
+    permission_classes = [IsAuthenticated]
+
     def handle_uploaded_file(self, file):
         file_name = file.name
         char = string.ascii_letters
-        cover_string = ''.join(random.choice(char) for x in range(12))
+        cover_string = ''.join(random.choice(char) for x in range(36))
         path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         folder = os.path.join(path, 'media', 'images')
 
@@ -1163,9 +1165,8 @@ class ImageUpload(APIView):
             os.makedirs(folder, exist_ok=True)
 
         new_file_name = cover_string + '.' + file_name.split('.')[-1]
-        event_photo = os.path.join(folder, new_file_name)
-
-        with open(event_photo, 'wb+') as destination:
+        photo = os.path.join(folder, new_file_name)
+        with open(photo, 'wb+') as destination:
             for chunk in file.chunks():
                 destination.write(chunk)
         return new_file_name

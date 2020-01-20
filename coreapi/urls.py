@@ -32,5 +32,5 @@ urlpatterns = [
     path('variant_type/<int:variant_type_id>/', views.VariantTypeView.as_view(), name='variant_type_view'),
     path('variant_type_option/<int:variant_type_option_id>/', views.VariantTypeOptionView.as_view(), name='variant_type_option_view'),
     path('product_variant/<int:product_variant>/', views.ProductVariantView.as_view(), name='product_variant_view'),
-    path('image/upload/', views.ImageUpload.as_view(), 'upload_image'),
+    path('image/upload/', views.ImageUpload.as_view(), name='upload_image'),
 ]
