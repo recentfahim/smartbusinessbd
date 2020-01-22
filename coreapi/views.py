@@ -131,7 +131,7 @@ class GetCity(APIView):
 
     def get(self, request, *args, **kwargs):
         cities = City.objects.all()
-        city_serializer = CountrySerializer(cities, many=True)
+        city_serializer = CitySerializer(cities, many=True)
 
         context = {
             'message': 'All cities',
@@ -292,18 +292,18 @@ class GetCompany(APIView):
         data = request.data
         print(data)
         company = Company.objects.create(
-            name=data.get('company_name'),
-            website=data.get('company_website'),
-            email=data.get('company_email'),
-            address=data.get('company_address'),
-            city=City.objects.get(name=data.get('company_city')),
-            region=data.get('company_region'),
-            postcode=data.get('company_postcode'),
-            country=Country.objects.get(name=data.get('company_country')),
-            phone=data.get('company_phone'),
-            fax=data.get('company_fax'),
-            image=data.get('company_image'),
-            logo=data.get('company_logo'),
+            name=data.get('name'),
+            website=data.get('website'),
+            email=data.get('email'),
+            address=data.get('address'),
+            city=City.objects.get(pk=data.get('city')),
+            region=data.get('region'),
+            postcode=data.get('postcode'),
+            country= Country.objects.get(pk=data.get('country')),
+            phone=data.get('phone'),
+            fax=data.get('fax'),
+            image=data.get('image'),
+            logo=data.get('logo'),
             created_by=user_into,
         )
         company_serializer = CompanySerializer(company)
@@ -814,19 +814,19 @@ class CompanyView(APIView):
         data = request.data
 
         Company.objects.filter(pk=kwargs.get('company_id')).update(
-            name=data.get('company_name'),
-            website=data.get('company_website'),
-            email=data.get('company_email'),
-            address=data.get('company_address'),
-            city=City.objects.get(name=data.get('company_city')),
-            region=data.get('company_region'),
-            postcode=data.get('company_postcode'),
-            country=Country.objects.get(name=data.get('company_country')),
-            phone=data.get('company_phone'),
-            fax=data.get('company_fax'),
-            image=data.get('company_image'),
-            logo=data.get('company_logo'),
-            updated_by=CustomUser.objects.get(username=data.get('company_created_by')),
+            name=data.get('name'),
+            website=data.get('website'),
+            email=data.get('email'),
+            address=data.get('address'),
+            city=City.objects.get(pk=data.get('city')),
+            region=data.get('region'),
+            postcode=data.get('postcode'),
+            country=Country.objects.get(pk=data.get('country')),
+            phone=data.get('phone'),
+            fax=data.get('fax'),
+            image=data.get('image'),
+            logo=data.get('logo'),
+            updated_by=CustomUser.objects.get(username=data.get('created_by')),
         )
         context = {
             'message': 'Company updated successfully'
