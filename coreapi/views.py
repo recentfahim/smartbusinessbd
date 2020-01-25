@@ -794,16 +794,16 @@ class CompanyView(APIView):
 
     def get(self, request, *args, **kwargs):
         user_into = decode_token(request.META)
-        company = Company.objects.filter(pk=kwargs.get('company_id'))
+        company = Company.objects.get(pk=kwargs.get('company_id'))
         company_serializer = CompanySerializer(company)
         context = {
             'message': 'Single Company',
             'data': company_serializer.data
         }
-        return Response('OK')
+        return Response(context, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        company = Company.objects.filter(pk=kwargs.get('company_id'))
+        company = Company.objects.get(pk=kwargs.get('company_id'))
         company.delete()
         context = {
             'message': 'Company Deleted Successfully'
@@ -826,7 +826,7 @@ class CompanyView(APIView):
             fax=data.get('fax'),
             image=data.get('image'),
             logo=data.get('logo'),
-            updated_by=CustomUser.objects.get(username=data.get('created_by')),
+          #  updated_by=CustomUser.objects.get(username=data.get('created_by')),
         )
         context = {
             'message': 'Company updated successfully'
