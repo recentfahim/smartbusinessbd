@@ -1,19 +1,20 @@
 from rest_framework import serializers
-from .models import Brand, Category, City, ContactCompany, ContactPerson, Country, CustomUser, SubCategory, Product, \
-    Warehouse, Company, Partnership, ProductVariant, ProductImage, VariantType, VariantTypeOption, SellRecord,\
-    EcommerceHasProduct, EcommerceSite
+from .models import City, Country, Warehouse, Company
+from inventory.models import Brand, Category, Product, VariantType, ProductVariant, VariantTypeOption
+from users.models import Contact, User
+from partnership.models import Partnership, EcommerceHasProduct, EcommerceSite, SellRecord
 
 
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'role', 'phone', 'avatar']
 
 
 class CustomUserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomUser
+        model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'role', 'phone', 'avatar']
 
 
@@ -45,21 +46,11 @@ class ContactCompanySerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
 
     class Meta:
-        model = ContactCompany
+        model = Contact
         fields = ['id', 'company_name', 'group_reference', 'attention', 'address_1', 'address_2', 'country', 'city',
                   'post_code', 'company_email', 'phone', 'fax', 'mobile_number', 'skype', 'website', 'supplier',
                   'customer', 'created_by'
                   ]
-
-
-class ContactPersonSerializer(serializers.ModelSerializer):
-    created_by = UserSerializer(read_only=True)
-    company = ContactCompanySerializer(read_only=True)
-
-    class Meta:
-        model = ContactPerson
-        fields = ['id', 'name', 'mobile_number', 'email', 'created_by', 'supplier', 'customer', 'company']
-
 
 
 class CategorySerializerForSubCategory(serializers.ModelSerializer):
@@ -68,17 +59,7 @@ class CategorySerializerForSubCategory(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'is_public']
 
 
-class SubCategorySerializer(serializers.ModelSerializer):
-    created_by = UserSerializer(read_only=True)
-    category = CategorySerializerForSubCategory(read_only=True)
-
-    class Meta:
-        model = SubCategory
-        fields = ['id', 'name', 'description', 'created_by', 'is_public','category']
-
-
 class CategorySerializer(serializers.ModelSerializer):
-    category_sub_category = SubCategorySerializer(read_only=True, many=True)
     created_by = UserSerializer(read_only=True)
 
     class Meta:
@@ -101,7 +82,6 @@ class CompanySerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     brand = BrandSerializer(read_only=True)
     category = CategorySerializer(read_only=True)
-    sub_category = SubCategorySerializer(read_only=True)
     created_by = UserSerializer(read_only=True)
 
     class Meta:

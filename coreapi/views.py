@@ -1,24 +1,22 @@
-from django.shortcuts import render, HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.views.generic import TemplateView
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
-from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from coreapi.components.googleviews import GoogleOAuth2AdapterIdToken
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_auth.registration.views import SocialLoginView
-from .models import Brand, Category, City, ContactCompany, ContactPerson, Country, CustomUser, SubCategory, Product, \
-    Warehouse, Product, Partnership, Company, VariantType, ProductVariant, VariantTypeOption, SellRecord, \
-    EcommerceSite, EcommerceHasProduct
+from .models import City, Country, Warehouse, Company
+from inventory.models import Brand, Category, Product, VariantType, ProductVariant, VariantTypeOption
+from users.models import User
+from partnership.models import Partnership, EcommerceHasProduct, EcommerceSite, SellRecord
 from .serializers import BrandSerializer, CategorySerializer, CitySerializer, ContactCompanySerializer, \
-    ContactPersonSerializer, CountrySerializer, UserSerializer, ProductSerializer, WarehouseSerializer, \
-    SubCategorySerializer, CompanySerializer, PartnershipSerializer, SellRecordSerializer, EcommerceSiteSerializer, \
-    EcommerceHasProductSerializer, VariantTypeSerializer, VariantTypeOptionSerializer, ProductVariantSerializer
+    CountrySerializer, ProductSerializer, CompanySerializer, PartnershipSerializer,\
+    SellRecordSerializer, EcommerceSiteSerializer, EcommerceHasProductSerializer, VariantTypeSerializer, \
+    VariantTypeOptionSerializer, ProductVariantSerializer
 from rest_framework.permissions import IsAuthenticated
 import jwt
 from django.conf import settings
-from rest_framework.authtoken.models import Token
 import string
 import random
 import os
@@ -31,7 +29,7 @@ class Index(TemplateView):
 def decode_token(header):
     access_token = header.get('HTTP_AUTHORIZATION')[4:]
     decoded_access_token = jwt.decode(access_token, settings.SECRET_KEY)
-    user = CustomUser.objects.get(pk=decoded_access_token.get('user_id'))
+    user = User.objects.get(pk=decoded_access_token.get('user_id'))
 
     return user
 
@@ -1159,7 +1157,7 @@ class ImageUpload(APIView):
         char = string.ascii_letters
         cover_string = ''.join(random.choice(char) for x in range(36))
         path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        folder = os.path.join(path, 'media', 'images')
+        folder = os.path.join(path, '../../../media', 'images')
 
         if not os.path.exists(path):
             os.makedirs(folder, exist_ok=True)

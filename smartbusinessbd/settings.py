@@ -33,6 +33,9 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_auth.registration',
     'coreapi',
+    'inventory',
+    'users',
+    'partnership',
     'allauth',
     'sslserver',
     'allauth.account',
@@ -42,7 +45,7 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-AUTH_USER_MODEL = 'coreapi.CustomUser'
+AUTH_USER_MODEL = 'users.User'
 
 REST_AUTH_SERIALIZERS = {
     "USER_DETAILS_SERIALIZER": "coreapi.serializers.CustomUserDetailsSerializer",
