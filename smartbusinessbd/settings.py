@@ -48,7 +48,7 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = 'users.User'
 
 REST_AUTH_SERIALIZERS = {
-    "USER_DETAILS_SERIALIZER": "coreapi.serializers.CustomUserDetailsSerializer",
+    "USER_DETAILS_SERIALIZER": "users.serializers.CustomUserDetailsSerializer",
 }
 
 SITE_ID = 2
