@@ -590,50 +590,6 @@ class PartnershipView(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
 
-class ProductView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        user_into = decode_token(request.META)
-        product = Product.objects.filter(pk=kwargs.get('product_id')).first()
-        product_serializer = ProductSerializer(product)
-        context = {
-            'message': 'Single products',
-            'data': product_serializer.data
-        }
-
-        return Response(context, status=status.HTTP_200_OK)
-
-    def delete(self, request, *args, **kwargs):
-        product = Product.objects.filter(pk=kwargs.get('product_id')).first()
-        product.delete()
-        context = {
-            'message': 'Product delete successfully'
-        }
-        return Response(context, status=status.HTTP_200_OK)
-
-    def put(self, request, *args, **kwargs):
-        data = request.data
-        product = Product.objects.filter(pk=kwargs.get('product_id')).update(
-            item_key=data.get('product_key'),
-            item_name=data.get('product_name'),
-            stock_alert=data.get('product_stock_alert'),
-            unit=data.get('product_unit'),
-            vat=data.get('product_vat'),
-            description=data.get('product_description'),
-            track=data.get('product_tract'),
-            brand=Brand.objects.filter(name=data.get('product_brand')).first(),
-            category=Category.objects.filter(name=data.get('product_category')).first(),
-            sub_category=SubCategory.objects.filter(name=data.get('product_sub_category')).first(),
-            warehouse=Warehouse.objects.filter(name=data.get('product_warehouse')).first(),
-            company=Company.objects.filter(name=data.get('product_company')).first(),
-            updated_by=CustomUser.objects.filter(username=data.get('product_updated_by')).first(),
-        )
-        context = {
-            'message': 'Product Updated Successfully',
-        }
-        return Response(context, status=status.HTTP_200_OK)
-
 
 class SellRecordView(APIView):
     permission_classes = [IsAuthenticated]
