@@ -2,10 +2,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.views.generic import TemplateView
-from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
-from coreapi.components.googleviews import GoogleOAuth2AdapterIdToken
-from allauth.socialaccount.providers.oauth2.client import OAuth2Client
-from rest_auth.registration.views import SocialLoginView
 from .models import City, Country, Warehouse, Company
 from .serializers import CitySerializer, CountrySerializer, CompanySerializer
 from rest_framework.permissions import IsAuthenticated
@@ -160,15 +156,6 @@ class CompanyView(APIView):
         }
 
         return Response(context, status=status.HTTP_200_OK)
-
-
-class FacebookLogin(SocialLoginView):
-    adapter_class = FacebookOAuth2Adapter
-
-
-class GoogleLogin(SocialLoginView):
-    adapter_class = GoogleOAuth2AdapterIdToken
-    client_class = OAuth2Client
 
 
 class ImageUpload(APIView):
