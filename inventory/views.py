@@ -7,7 +7,7 @@ from .models import Category, Brand, Product, VariantType, VariantTypeOption, Pr
 from coreapi.models import Warehouse, Company
 from rest_framework import status
 from .serializers import CategorySerializer, BrandSerializer, ProductSerializer, VariantTypeSerializer, \
-    VariantTypeOptionSerializer, ProductVariantSerializer
+    VariantTypeOptionSerializer, ProductVariantSerializer, CategoryCreateSerializer
 
 
 class GetCategory(APIView):
@@ -30,6 +30,7 @@ class GetCategory(APIView):
         category = Category.objects.create(
             name=data.get('name'),
             description=data.get('description'),
+            parent=Category.objects.filter(id=data.get('parent')).first(),
             created_by=user,
         )
         category_serializer = CategorySerializer(category)

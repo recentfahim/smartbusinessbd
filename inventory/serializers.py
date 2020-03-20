@@ -10,6 +10,14 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'parent']
 
 
+class CategoryCreateSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'description', 'parent', 'created_by']
+
+
 class BrandSerializer(serializers.ModelSerializer):
 
     class Meta:
