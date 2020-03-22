@@ -1,5 +1,5 @@
 from django.db import models
-from . import Country, City
+from coreapi.models import Country, City
 from generic.models import BaseModel
 
 

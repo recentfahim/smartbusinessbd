@@ -3,8 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from generic.views import decode_token
 from rest_framework.response import Response
-from .models import Category, Brand, Product, VariantType, VariantTypeOption, ProductVariant
-from coreapi.models import Warehouse, Company
+from .models import Category, Brand, Product, VariantType, VariantTypeOption, ProductVariant, Warehouse
+from coreapi.models import Company
 from rest_framework import status
 from .serializers import CategorySerializer, BrandSerializer, ProductSerializer, VariantTypeSerializer, \
     VariantTypeOptionSerializer, ProductVariantSerializer, CategoryCreateSerializer

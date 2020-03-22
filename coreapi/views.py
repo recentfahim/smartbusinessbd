@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.views.generic import TemplateView
-from .models import City, Country, Warehouse, Company
+from .models import City, Country, Company
 from .serializers import CitySerializer, CountrySerializer, CompanySerializer
 from rest_framework.permissions import IsAuthenticated
 import string

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import City, Country, Warehouse, Company
+from .models import City, Country, Company
 from inventory.models import Brand, Category, Product, VariantType, ProductVariant, VariantTypeOption
 from users.models import Contact, User
 from partnership.models import Partnership, EcommerceHasProduct, EcommerceSite, SellRecord
@@ -29,11 +29,3 @@ class CompanySerializer(serializers.ModelSerializer):
         model = Company
         fields = ['id', 'name', 'website', 'email', 'address', 'city', 'region', 'postcode', 'country', 'phone', 'fax',
                   'image', 'logo', 'created_at', 'created_by']
-
-
-class WarehouseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Warehouse
-        fields = ['id', 'name', 'address', 'phone', 'mobile_number', 'country', 'city', 'email', 'is_primary',
-                  'created_by'
-                  ]

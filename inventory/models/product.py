@@ -1,7 +1,7 @@
 from django.db import models
 from generic.models import BaseModel
-from . import Brand, Category
-from coreapi.models import Warehouse, Company
+from . import Brand, Category, Warehouse
+from coreapi.models import Company
 
 
 class Product(BaseModel):

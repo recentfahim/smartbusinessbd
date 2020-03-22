@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Brand, Product, VariantType, VariantTypeOption, ProductVariant
+from .models import Category, Brand, Product, VariantType, VariantTypeOption, ProductVariant, Warehouse
 from users.serializers import UserSerializer
 
 
@@ -61,3 +61,11 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         model = ProductVariant
         fields = ['id', 'name', 'purchase_price', 'selling_price', 'quantity', 'product', 'variant_type',
                   'variant_type_option', 'created_by']
+
+
+class WarehouseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Warehouse
+        fields = ['id', 'name', 'address', 'phone', 'mobile_number', 'country', 'city', 'email', 'is_primary',
+                  'created_by'
+                  ]
