@@ -130,7 +130,7 @@ class GetVariantType(APIView):
         user = decode_token(request.META)
         data = request.data
         variant_type = VariantType.objects.create(
-            name=data.get('variant_type_name'),
+            name=data.get('name'),
             created_by=user
         )
         variant_type_serializer = VariantTypeSerializer(variant_type)
@@ -160,8 +160,8 @@ class GetVariantTypeOption(APIView):
         user = decode_token(request.META)
         data = request.data
         variant_type_option = VariantTypeOption.objects.create(
-            name=data.get('variant_type_option_name'),
-            variant_type=VariantType.objects.filter(name=data.get('variant_type')).first(),
+            name=data.get('name'),
+            variant_type=VariantType.objects.filter(id=data.get('variant_type')).first(),
             created_by=user
         )
         variant_type_option_serializer = VariantTypeOptionSerializer(variant_type_option)
@@ -311,7 +311,7 @@ class VariantTypeView(APIView):
         user = decode_token(request.META)
         data = request.data
         VariantType.objects.filter(pk=kwargs.get('variant_type_id')).update(
-            name=data.get('variant_type_name'),
+            name=data.get('name'),
             updated_by=user
         )
         context = {
@@ -347,8 +347,8 @@ class VariantTypeOptionView(APIView):
         user = decode_token(request.META)
         data = request.data
         VariantTypeOption.objects.filter(pk=kwargs.get('variant_type_option_id')).update(
-            name=data.get('variant_type_option_name'),
-            variant_type=VariantType.objects.filter(name=data.get('variant_type')).first(),
+            name=data.get('name'),
+            variant_type=VariantType.objects.filter(id=data.get('variant_type')).first(),
             updated_by=user
         )
         context = {
