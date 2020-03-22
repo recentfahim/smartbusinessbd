@@ -234,7 +234,8 @@ class CategoryView(APIView):
         data = self.request.data
         name = data.get('name')
         description = data.get('description')
-        Category.objects.filter(pk=self.kwargs.get('cat_id')).update(name=name, description=description)
+        parent = Category.objects.filter(pk=data.get('parent')).first()
+        Category.objects.filter(pk=self.kwargs.get('cat_id')).update(name=name, description=description, parent=parent)
 
         category = Category.objects.get(pk=self.kwargs.get('cat_id'))
         category_serializer = CategorySerializer(category)
