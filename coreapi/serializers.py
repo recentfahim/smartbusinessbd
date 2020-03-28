@@ -13,11 +13,11 @@ class CitySerializer(serializers.ModelSerializer):
 
 
 class CountrySerializer(serializers.ModelSerializer):
-    country_city = CitySerializer(many=True, read_only=True)
+    city_country = CitySerializer(many=True, read_only=True)
 
     class Meta:
         model = Country
-        fields = ['id', 'name', 'country_city']
+        fields = ['id', 'name', 'city_country']
 
 
 class CompanySerializer(serializers.ModelSerializer):
