@@ -166,7 +166,7 @@ class ImageUpload(APIView):
         char = string.ascii_letters
         cover_string = ''.join(random.choice(char) for x in range(36))
         path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        folder = os.path.join(path, '../../../media', 'images')
+        folder = os.path.join(path, 'media', 'images')
 
         if not os.path.exists(path):
             os.makedirs(folder, exist_ok=True)
