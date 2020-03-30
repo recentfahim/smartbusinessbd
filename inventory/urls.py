@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import GetCategory, GetProduct, GetBrand, GetVariantType, GetProductVariant, GetVariantTypeOption, \
-    CategoryView, BrandView, VariantTypeView, VariantTypeOptionView, ProductVariantView, ProductView
+    CategoryView, BrandView, VariantTypeView, VariantTypeOptionView, ProductVariantView, ProductView, GetWarehouse, \
+    WarehouseView
 
 urlpatterns = [
     path('category/', GetCategory.as_view(), name='category'),
@@ -16,4 +17,7 @@ urlpatterns = [
          name='variant_type_option_view'),
     path('product_variant/<int:product_variant>/', ProductVariantView.as_view(), name='product_variant_view'),
     path('product/<int:product_id>/', ProductView.as_view(), name='product_view'),
+    path('warehouse/', GetWarehouse.as_view(), name='warehouse'),
+    path('warehouse/<int:warehouse_id>/', WarehouseView.as_view(), name='warehouse_view'),
+
 ]

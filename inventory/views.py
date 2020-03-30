@@ -4,10 +4,10 @@ from rest_framework.permissions import IsAuthenticated
 from generic.views import decode_token
 from rest_framework.response import Response
 from .models import Category, Brand, Product, VariantType, VariantTypeOption, ProductVariant, Warehouse
-from coreapi.models import Company
+from coreapi.models import Company, Country, City
 from rest_framework import status
 from .serializers import CategorySerializer, BrandSerializer, ProductSerializer, VariantTypeSerializer, \
-    VariantTypeOptionSerializer, ProductVariantSerializer, CategoryCreateSerializer
+    VariantTypeOptionSerializer, ProductVariantSerializer, CategoryCreateSerializer, WarehouseSerializer
 
 
 class GetCategory(APIView):
@@ -444,5 +444,84 @@ class ProductView(APIView):
         )
         context = {
             'message': 'Product Updated Successfully',
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class GetWarehouse(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = decode_token(request.META)
+        warehouses = user.warehouse_created_by.all()
+        warehouse_serializer = WarehouseSerializer(warehouses, many=True)
+        context = {
+            'message': 'All Warehouse',
+            'data': warehouse_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        user = decode_token(request.META)
+        data = request.data
+
+        warehouse = Warehouse.objects.create(
+            name=data.get('name'),
+            address=data.get('address'),
+            phone=data.get('phone'),
+            mobile_number=data.get('mobile_number'),
+            country=Country.objects.filter(pk=data.get('country')).first(),
+            city=City.objects.filter(pk=data.get('city')).first(),
+            email=data.get('email'),
+            is_primary=data.get('is_primary'),
+            created_by=user,
+        )
+        warehouse_serializer = WarehouseSerializer(warehouse)
+        context = {
+            'message': 'Warehouse Created Successfully',
+            'data': warehouse_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class WarehouseView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
+        warehouse = Warehouse.objects.filter(pk=kwargs.get('warehouse_id')).first()
+        warehouse_serializer = WarehouseSerializer(warehouse)
+        context = {
+            'message': 'Single warehouse',
+            'data': warehouse_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        warehouse = Warehouse.objects.filter(pk=kwargs.get('warehouse_id')).first()
+        warehouse.delete()
+        context = {
+            'message': 'Warehouse delete successfully'
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        user = decode_token(request.META)
+        data = request.data
+        warehouse = Warehouse.objects.filter(pk=kwargs.get('warehouse_id')).update(
+            name=data.get('name'),
+            address=data.get('address'),
+            phone=data.get('phone'),
+            mobile_number=data.get('mobile_number'),
+            country=Country.objects.filter(pk=data.get('country')).first(),
+            city=City.objects.filter(pk=data.get('city')).first(),
+            email=data.get('email'),
+            is_primary=data.get('is_primary'),
+            created_by=user,
+        )
+        context = {
+            'message': 'Warehouse Updated Successfully',
         }
         return Response(context, status=status.HTTP_200_OK)
