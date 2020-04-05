@@ -7,6 +7,7 @@ from coreapi.models import Company
 class Product(BaseModel):
     item_key = models.CharField(max_length=10, blank=True, null=True)
     item_name = models.CharField(max_length=30, null=True)
+    type = models.CharField(max_length=10, null=True)
     stock_alert = models.IntegerField(blank=True, null=True)
     unit = models.CharField(max_length=10, blank=True, null=True)
     vat = models.FloatField(blank=True, null=True)

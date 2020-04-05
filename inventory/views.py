@@ -91,17 +91,17 @@ class GetProduct(APIView):
         user = decode_token(request.META)
         data = request.data
         product = Product.objects.create(
-            item_key=data.get('product_key'),
-            item_name=data.get('product_name'),
-            stock_alert=data.get('product_stock_alert'),
-            unit=data.get('product_unit'),
-            vat=data.get('product_vat'),
-            description=data.get('product_description'),
-            track=data.get('product_tract'),
-            brand=Brand.objects.filter(name=data.get('product_brand')).first(),
-            category=Category.objects.filter(name=data.get('product_category')).first(),
-            warehouse=Warehouse.objects.filter(name=data.get('product_warehouse')).first(),
-            company=Company.objects.filter(name=data.get('product_company')).first(),
+            item_key=data.get('item_key'),
+            item_name=data.get('item_name'),
+            type=data.get('type'),
+            stock_alert=data.get('stock_alert'),
+            unit=data.get('unit'),
+            vat=data.get('vat'),
+            description=data.get('description'),
+            track=data.get('track'),
+            brand=Brand.objects.filter(id=data.get('brand')).first(),
+            category=Category.objects.filter(id=data.get('category')).first(),
+            company=Company.objects.filter(id=data.get('company')).first(),
             created_by=user,
         )
         product_serializer = ProductSerializer(product)
@@ -429,16 +429,16 @@ class ProductView(APIView):
         user = decode_token(request.META)
         data = request.data
         product = Product.objects.filter(pk=kwargs.get('product_id')).update(
-            item_key=data.get('product_key'),
-            item_name=data.get('product_name'),
-            stock_alert=data.get('product_stock_alert'),
-            unit=data.get('product_unit'),
-            vat=data.get('product_vat'),
-            description=data.get('product_description'),
-            track=data.get('product_tract'),
-            brand=Brand.objects.filter(name=data.get('product_brand')).first(),
-            category=Category.objects.filter(name=data.get('product_category')).first(),
-            warehouse=Warehouse.objects.filter(name=data.get('product_warehouse')).first(),
+            item_key=data.get('item_key'),
+            item_name=data.get('item_name'),
+            type=data.get('type'),
+            stock_alert=data.get('stock_alert'),
+            unit=data.get('unit'),
+            vat=data.get('vat'),
+            description=data.get('description'),
+            track=data.get('track'),
+            brand=Brand.objects.filter(id=data.get('brand')).first(),
+            category=Category.objects.filter(id=data.get('category')).first(),
             company=Company.objects.filter(name=data.get('product_company')).first(),
             updated_by=user,
         )
