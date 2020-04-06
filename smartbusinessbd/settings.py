@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'coreapi',
     'inventory',
     'users',
-    'partnership',
+    'Ecommerce',
     'allauth',
     'sslserver',
     'allauth.account',

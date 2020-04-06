@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import City, Country, Company
 from inventory.models import Brand, Category, Product, VariantType, ProductVariant, VariantTypeOption
 from users.models import Contact, User
-from partnership.models import Partnership, EcommerceHasProduct, EcommerceSite, SellRecord
+from Ecommerce.models import Partnership, EcommerceHasProduct, EcommerceSite, SellRecord
 from users.serializers import UserSerializer
 
 

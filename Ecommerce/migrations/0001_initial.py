@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
                 ('percentage', models.CharField(blank=True, max_length=5, null=True)),
             ],
             options={
-                'db_table': 'partnership',
+                'db_table': 'Ecommerce',
             },
         ),
         migrations.CreateModel(

@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('partnership', '0001_initial'),
+        ('Ecommerce', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('coreapi', '0002_auto_20200323_0036'),
         ('inventory', '0002_auto_20200323_0036'),
@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='sellrecord',
             name='ecommerce_has_product',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sellrecord_ecommerce_has_product', to='partnership.EcommerceHasProduct'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sellrecord_ecommerce_has_product', to='Ecommerce.EcommerceHasProduct'),
         ),
         migrations.AddField(
             model_name='sellrecord',
@@ -38,32 +38,32 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='sellrecord_updated_by', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
-            model_name='partnership',
+            model_name='Ecommerce',
             name='company',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='partnership_company', to='coreapi.Company'),
         ),
         migrations.AddField(
-            model_name='partnership',
+            model_name='Ecommerce',
             name='created_by',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='partnership_created_by', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
-            model_name='partnership',
+            model_name='Ecommerce',
             name='deleted_by',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='partnership_deleted_by', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
-            model_name='partnership',
+            model_name='Ecommerce',
             name='partner',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='partnership_partner', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
-            model_name='partnership',
+            model_name='Ecommerce',
             name='product',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='partnership_product', to='inventory.Product'),
         ),
         migrations.AddField(
-            model_name='partnership',
+            model_name='Ecommerce',
             name='updated_by',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='partnership_updated_by', to=settings.AUTH_USER_MODEL),
         ),
@@ -95,7 +95,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='ecommercehasproduct',
             name='ecommerce',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='ecommercehasproduct_online_store', to='partnership.EcommerceSite'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='ecommercehasproduct_online_store', to='Ecommerce.EcommerceSite'),
         ),
         migrations.AddField(
             model_name='ecommercehasproduct',
