@@ -3,11 +3,12 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from generic.views import decode_token
 from rest_framework.response import Response
-from .models import Category, Brand, Product, VariantType, VariantTypeOption, ProductVariant, Warehouse
+from .models import Category, Brand, Product, VariantType, VariantTypeOption, ProductVariant, Warehouse, ProductImage
 from coreapi.models import Company, Country, City
 from rest_framework import status
 from .serializers import CategorySerializer, BrandSerializer, ProductSerializer, VariantTypeSerializer, \
-    VariantTypeOptionSerializer, ProductVariantSerializer, CategoryCreateSerializer, WarehouseSerializer
+    VariantTypeOptionSerializer, ProductVariantSerializer, CategoryCreateSerializer, WarehouseSerializer, \
+    ProductImageSerializer
 
 
 class GetCategory(APIView):
@@ -523,5 +524,74 @@ class WarehouseView(APIView):
         )
         context = {
             'message': 'Warehouse Updated Successfully',
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class GetProductImage(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = decode_token(request.META)
+        product_images = user.productimage_created_by.all()
+        product_image_serializer = ProductImageSerializer(product_images, many=True)
+        context = {
+            'message': 'All Product Image',
+            'data': product_image_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        user = decode_token(request.META)
+        data = request.data
+
+        product_image = ProductImage.objects.create(
+            image_path=data.get('image_path'),
+            product_id=data.get('product'),
+            variant_id=data.get('variant'),
+            created_by=user,
+        )
+        product_image_serializer = ProductImageSerializer(product_image)
+        context = {
+            'message': 'Product Image Created Successfully',
+            'data': product_image_serializer.data
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+
+class ProductImageView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user_into = decode_token(request.META)
+        product_image = ProductImage.objects.filter(pk=kwargs.get('product_image_id')).first()
+        product_image_serializer = ProductImageSerializer(product_image)
+        context = {
+            'message': 'Single Product Image',
+            'data': product_image_serializer.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        product_image = ProductImage.objects.filter(pk=kwargs.get('product_image_id')).first()
+        product_image.delete()
+        context = {
+            'message': 'Product Image delete successfully'
+        }
+        return Response(context, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        user = decode_token(request.META)
+        data = request.data
+        product_image = ProductImage.objects.filter(pk=kwargs.get('product_image_id')).update(
+            image_path=data.get('image_path'),
+            product_id=data.get('product'),
+            variant_id=data.get('variant'),
+            updated_by=user,
+        )
+        context = {
+            'message': 'Product Image Updated Successfully',
         }
         return Response(context, status=status.HTTP_200_OK)
