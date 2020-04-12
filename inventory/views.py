@@ -102,6 +102,7 @@ class GetProduct(APIView):
             track=data.get('track'),
             brand=Brand.objects.filter(id=data.get('brand')).first(),
             category=Category.objects.filter(id=data.get('category')).first(),
+            warehouse=Warehouse.objects.filter(id=data.get('warehouse')).first(),
             company=Company.objects.filter(id=data.get('company')).first(),
             created_by=user,
         )

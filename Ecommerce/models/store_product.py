@@ -13,3 +13,9 @@ class StoreProduct(BaseModel):
                                   blank=True, null=True)
     variants = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, related_name='%(class)s_variant',
                                  blank=True, null=True)
+
+    class Meta:
+        db_table = 'store_product'
+
+    def __str__(self):
+        return '{} - {}'.format(self.product.item_name, self.ecommerce.name)

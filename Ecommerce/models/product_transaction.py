@@ -19,6 +19,7 @@ class ProductTransaction(BaseModel):
     class Meta:
         verbose_name = 'product_transaction'
         verbose_name_plural = 'product_transactions'
+        db_table = 'product_transaction'
 
     def __str__(self):
-        return self.product + ' # ' + self.warehouse
+        return self.product.item_name + ' # ' + self.warehouse.name

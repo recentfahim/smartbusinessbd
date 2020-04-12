@@ -16,3 +16,10 @@ class StoreProductTransaction(BaseModel):
                                  blank=True, null=True)
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='%(class)s_warehouse',
                                   blank=True, null=True)
+
+    class Meta:
+        db_table = 'store_product_transaction'
+
+    def __str__(self):
+        return '{} # {}'.format(self.product, self.warehouse.name)
+

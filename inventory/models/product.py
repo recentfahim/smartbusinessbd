@@ -16,6 +16,8 @@ class Product(BaseModel):
     brand = models.ForeignKey(Brand, blank=True, null=True, on_delete=models.CASCADE, related_name='%(class)s_brand')
     category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.CASCADE,
                                  related_name='%(class)s_category')
+    sub_category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.CASCADE,
+                                     related_name='%(class)s_sub_category')
     warehouse = models.ForeignKey(Warehouse, blank=True, null=True, on_delete=models.CASCADE,
                                   related_name='%(class)s_warehouse')
     company = models.ForeignKey(Company, blank=True, null=True, related_name='%(class)s_company',

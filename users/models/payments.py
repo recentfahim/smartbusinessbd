@@ -9,3 +9,10 @@ class Payment(BaseModel):
     note = models.CharField(max_length=32, blank=True, null=True)
     date = models.DateTimeField(blank=True, null=True)
     transaction_id = models.CharField(max_length=32, blank=True, null=True)
+
+    class Meta:
+        db_table = 'payments'
+
+    def __str__(self):
+        return '{} - {}'.format(self.created_by.username, self.date)
+

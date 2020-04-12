@@ -14,7 +14,7 @@ class Partnership(BaseModel):
     percentage = models.CharField(max_length=5, blank=True, null=True)
 
     class Meta:
-        db_table = 'Ecommerce'
+        db_table = 'partnership'
 
     def __str__(self):
         return '{} - {}'.format(self.created_by.username, self.percentage)
